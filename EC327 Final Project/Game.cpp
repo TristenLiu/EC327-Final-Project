@@ -12,8 +12,8 @@ void Game::initVar()
 	this->lvl1button.setTexture(button1);
 	this->grid.loadFromFile("images/grid_6.png");
 	this->playGrid.setTexture(grid);
-	this->playGrid.setScale(.1, .1);
-	this->playGrid.setPosition(200, 200);
+	this->playGrid.setScale(.1f, .1f);
+	this->playGrid.setPosition(200.f, 200.f);
 
 	this->gameState = 1; /*First game state is title menu*/
 }
@@ -44,6 +44,15 @@ const bool Game::isRunning() const
 	return this->window->isOpen();
 }
 
+//Functions
+
+void Game::updateMousePosition() 
+{
+	//update the mouse position relative to window
+	this->mousePos = sf::Mouse::getPosition(*this->window);
+	this->mousePosView = this->window->mapPixelToCoords(this->mousePos);
+}
+
 void Game::pollEvents()
 {
 	while (this->window->pollEvent(this->ev))
@@ -57,14 +66,7 @@ void Game::pollEvents()
 			if (this->ev.key.code == sf::Keyboard::Escape)	//change this to open a game menu when pressed.
 				this->window->close();
 
-			//change all of these inputs to mouse clicks on screen buttons in the future
-			else if (this->gameState == 1)
-			{
-				if (this->ev.key.code == sf::Keyboard::Space) //Pressing space on title screen will change the game state to the game board
-				{
-					this->gameState = 2;
-				}
-			}
+			//temporary keyboard inputs for window changing
 			else if (this->gameState == 2)
 			{
 				if (this->ev.key.code == sf::Keyboard::Enter) //pressing Enter on the game brings you to the 'memo state'
@@ -83,11 +85,29 @@ void Game::pollEvents()
 					this->gameState = 2;
 				}
 			}
+
+		//Replace above temporary code with this when proper buttons are added
+		case sf::Event::MouseButtonPressed:
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+				if (this->gameState == 1)
+				{
+					if (this->lvl1button.getGlobalBounds().contains(this->mousePosView)) //Check if if mouse is over lvl 1 button when clicked
+					{
+						this->gameState = 2;
+					}
+				}
+			}
 		}
 	}
 }
 
-//Functions
+void Game::update()
+{
+	//Event Polling
+	this->pollEvents();
+	this->updateMousePosition();
+}
+
 void Game::renderScreen()
 {
 	this->window->draw(this->mainbg);
@@ -166,12 +186,6 @@ void Game::renderScreen()
 
 		//may need a separate state for when memo is being used
 	}
-}
-
-void Game::update()
-{
-	//Event Polling
-	this->pollEvents();
 }
 
 void Game::render()

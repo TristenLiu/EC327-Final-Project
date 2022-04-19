@@ -17,6 +17,7 @@ class Game
 {
 private:
 	//Variables
+	//Window Vars
 	sf::RenderWindow* window;
 	sf::VideoMode videoMode;
 	sf::Event ev;
@@ -28,8 +29,11 @@ private:
 	sf::Texture grid;
 	sf::Sprite playGrid;
 
-	/*
-	gameState will represent which screen the window will be showing
+	//Mouse positions
+	sf::Vector2i mousePos;
+	sf::Vector2f mousePosView;
+
+	/* gameState will represent which screen the window will be showing
 	1 = title screen
 	2 = game board
 	3 = game board (in memo mode)
@@ -49,6 +53,7 @@ public:
 	const bool isRunning() const;
 
 	//Functions
+	void updateMousePosition();
 	void renderScreen();
 	void pollEvents();
 	void update();
