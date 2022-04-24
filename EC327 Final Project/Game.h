@@ -22,12 +22,11 @@ private:
 	sf::VideoMode videoMode;
 	sf::Event ev;
 	sf::Font font;
-	sf::Texture background;
-	sf::Sprite mainbg;
-	sf::Texture button1;
-	sf::Sprite lvl1button;
-	sf::Texture grid;
-	sf::Sprite playGrid;
+	sf::Texture mainbgTexture, lvl1Texture, lvl2Texture, lvl3Texture, lvl4Texture, lvl5Texture, lvl6Texture, lvl7Texture, lvl8Texture, lvl9Texture, lvl10Texture, marathonTexture;
+	sf::Sprite mainbgSprite, lvl1Sprite, lvl2Sprite, lvl3Sprite, lvl4Sprite, lvl5Sprite, lvl6Sprite, lvl7Sprite, lvl8Sprite, lvl9Sprite, lvl10Sprite, marathonSprite;
+	sf::Texture gridTexture;
+	sf::Sprite gridSprite;
+	sf::Text gameTitle;
 
 	//Mouse positions
 	sf::Vector2i mousePos;
@@ -42,6 +41,9 @@ private:
 
 	//Private Functions
 	void initVar();
+	void initTexture();
+	void initSprite();
+	void initText();
 	void initWindow();
 
 public:
