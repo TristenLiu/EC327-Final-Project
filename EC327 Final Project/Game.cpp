@@ -1299,7 +1299,7 @@ void Game::render_flipped_panel()
 					}
 				}
 
-				//if panel is not yet flipped, print '?' to panel
+				//if panel is not yet flipped, print '?' to panel (potentially replace with letters)
 				else
 				{
 					ques_mark.setPosition(100 + (99 * j), 100 + (99 * i));
