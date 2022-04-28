@@ -29,7 +29,6 @@ void Game::initVar()
 void Game::initTexture()
 {
 	//Load Textures from image folder
-	this->mainbgTexture.loadFromFile("images/checkerboard2.png");
 	this->lvl1Texture.loadFromFile("images/Level1.png");
 	this->lvl2Texture.loadFromFile("images/Level2.png");
 	this->lvl3Texture.loadFromFile("images/Level3.png");
@@ -38,17 +37,13 @@ void Game::initTexture()
 	this->lvl6Texture.loadFromFile("images/Level6.png");
 	this->lvl7Texture.loadFromFile("images/Level7.png");
 	this->lvl8Texture.loadFromFile("images/Level8.png");
-	this->lvl9Texture.loadFromFile("images/Level9.png");
-	this->lvl10Texture.loadFromFile("images/Level10.png");
 	this->marathonTexture.loadFromFile("images/Marathon.png");
-	this->gridTexture.loadFromFile("images/grid_6.png");
 }
 
 void Game::initSprite()
 {
 	//Set textures to usable Sprites
 	//Each checkerboard square is 150px
-	this->mainbgSprite.setTexture(mainbgTexture);
 
 	//button sprites are 256x128 px
 	this->lvl1Sprite.setTexture(lvl1Texture);			this->lvl1Sprite.setScale(.50f, .50f);
@@ -59,10 +54,7 @@ void Game::initSprite()
 	this->lvl6Sprite.setTexture(lvl6Texture);			this->lvl6Sprite.setScale(.50f, .50f);
 	this->lvl7Sprite.setTexture(lvl7Texture);			this->lvl7Sprite.setScale(.50f, .50f);
 	this->lvl8Sprite.setTexture(lvl8Texture);			this->lvl8Sprite.setScale(.50f, .50f);
-	this->lvl9Sprite.setTexture(lvl9Texture);			this->lvl9Sprite.setScale(.50f, .50f);
-	this->lvl10Sprite.setTexture(lvl10Texture);			this->lvl10Sprite.setScale(.50f, .50f);
 	this->marathonSprite.setTexture(marathonTexture);	this->marathonSprite.setScale(0.50f, 0.50f);
-	this->gridSprite.setTexture(gridTexture);			this->gridSprite.setScale(.1f, .1f);		this->gridSprite.setPosition(200.f, 200.f);
 }
 
 void Game::initFont()
@@ -198,6 +190,31 @@ void Game::initText()
 	this->card_total_c5.setFillColor(sf::Color::Black);
 	this->card_total_c5.setString("NONE");
 
+	//temporary substitute for panels
+	this->number_1.setFont(Roboto);
+	this->number_1.setCharacterSize(36);
+	this->number_1.setFillColor(sf::Color::White);
+	this->number_1.setString("1");
+
+	this->number_2.setFont(Roboto);
+	this->number_2.setCharacterSize(36);
+	this->number_2.setFillColor(sf::Color::White);
+	this->number_2.setString("2");
+
+	this->number_3.setFont(Roboto);
+	this->number_3.setCharacterSize(36);
+	this->number_3.setFillColor(sf::Color::White);
+	this->number_3.setString("3");
+
+	this->number_bomb.setFont(Roboto);
+	this->number_bomb.setCharacterSize(36);
+	this->number_bomb.setFillColor(sf::Color::White);
+	this->number_bomb.setString("O");
+
+	this->ques_mark.setFont(Roboto);
+	this->ques_mark.setCharacterSize(36);
+	this->ques_mark.setFillColor(sf::Color::White);
+	this->ques_mark.setString("?");
 }
 
 void Game::initWindow()
@@ -245,111 +262,266 @@ void Game::pollEvents()
 	{
 		switch (this->ev.type)
 		{
-		case sf::Event::Closed:
-			this->window->close();
-			break;
-		case sf::Event::KeyPressed:
-			if (this->ev.key.code == sf::Keyboard::Escape)	//change this to open a game menu when pressed.
+			case sf::Event::Closed:
 				this->window->close();
+				break;
+			case sf::Event::KeyPressed:
+				if (this->ev.key.code == sf::Keyboard::Escape)	//change this to open a game menu when pressed.
+					this->window->close();
 
-			//temporary keyboard inputs for window changing
-			else if (this->current_state == 2)
-			{
-				if (this->ev.key.code == sf::Keyboard::Enter) //pressing Enter on the game brings you to the 'memo state'
+				//temporary keyboard inputs for window changing and panel selection
+				else if (this->current_state == 2 && isGameOver == 0 && isClearLevel == 0)
 				{
-					this->current_state = 3;
+					if (this->ev.key.code == sf::Keyboard::Tab) //pressing Tab will return to the title screen
+					{
+						this->current_state = 1;
+						startLevel = 0;
+						isGameOver = 0;
+					}
+
+					else if (this->ev.key.code == sf::Keyboard::A)
+					{
+						chosen_panel_row_index = 0;
+						chosen_panel_col_index = 0;
+					}
+					else if (this->ev.key.code == sf::Keyboard::B)
+					{
+						chosen_panel_row_index = 0;
+						chosen_panel_col_index = 1;
+					}
+					else if (this->ev.key.code == sf::Keyboard::C)
+					{
+						chosen_panel_row_index = 0;
+						chosen_panel_col_index = 2;
+					}
+					else if (this->ev.key.code == sf::Keyboard::D)
+					{
+						chosen_panel_row_index = 0;
+						chosen_panel_col_index = 3;
+					}
+					else if (this->ev.key.code == sf::Keyboard::E)
+					{
+						chosen_panel_row_index = 0;
+						chosen_panel_col_index = 4;
+					}
+					else if (this->ev.key.code == sf::Keyboard::F)
+					{
+						chosen_panel_row_index = 1;
+						chosen_panel_col_index = 0;
+					}
+					else if (this->ev.key.code == sf::Keyboard::G)
+					{
+						chosen_panel_row_index = 1;
+						chosen_panel_col_index = 1;
+					}
+					else if (this->ev.key.code == sf::Keyboard::H)
+					{
+						chosen_panel_row_index = 1;
+						chosen_panel_col_index = 2;
+					}
+					else if (this->ev.key.code == sf::Keyboard::I)
+					{
+						chosen_panel_row_index = 1;
+						chosen_panel_col_index = 3;
+					}
+					else if (this->ev.key.code == sf::Keyboard::J)
+					{
+						chosen_panel_row_index = 1;
+						chosen_panel_col_index = 4;
+					}
+					else if (this->ev.key.code == sf::Keyboard::K)
+					{
+						chosen_panel_row_index = 2;
+						chosen_panel_col_index = 0;
+					}
+					else if (this->ev.key.code == sf::Keyboard::L)
+					{
+						chosen_panel_row_index = 2;
+						chosen_panel_col_index = 1;
+					}
+					else if (this->ev.key.code == sf::Keyboard::M)
+					{
+						chosen_panel_row_index = 2;
+						chosen_panel_col_index = 2;
+					}
+					else if (this->ev.key.code == sf::Keyboard::N)
+					{
+						chosen_panel_row_index = 2;
+						chosen_panel_col_index = 3;
+					}
+					else if (this->ev.key.code == sf::Keyboard::O)
+					{
+						chosen_panel_row_index = 2;
+						chosen_panel_col_index = 4;
+					}
+					else if (this->ev.key.code == sf::Keyboard::P)
+					{
+						chosen_panel_row_index = 3;
+						chosen_panel_col_index = 0;
+					}
+					else if (this->ev.key.code == sf::Keyboard::Q)
+					{
+						chosen_panel_row_index = 3;
+						chosen_panel_col_index = 1;
+					}
+					else if (this->ev.key.code == sf::Keyboard::R)
+					{
+						chosen_panel_row_index = 3;
+						chosen_panel_col_index = 2;
+					}
+					else if (this->ev.key.code == sf::Keyboard::S)
+					{
+						chosen_panel_row_index = 3;
+						chosen_panel_col_index = 3;
+					}
+					else if (this->ev.key.code == sf::Keyboard::T)
+					{
+						chosen_panel_row_index = 3;
+						chosen_panel_col_index = 4;
+					}
+					else if (this->ev.key.code == sf::Keyboard::U)
+					{
+					chosen_panel_row_index = 4;
+					chosen_panel_col_index = 0;
+					}
+					else if (this->ev.key.code == sf::Keyboard::V)
+					{
+					chosen_panel_row_index = 4;
+					chosen_panel_col_index = 1;
+					}
+					else if (this->ev.key.code == sf::Keyboard::W)
+					{
+					chosen_panel_row_index = 4;
+					chosen_panel_col_index = 2;
+					}
+					else if (this->ev.key.code == sf::Keyboard::X)
+					{
+					chosen_panel_row_index = 4;
+					chosen_panel_col_index = 3;
+					}
+					else if (this->ev.key.code == sf::Keyboard::Y)
+					{
+					chosen_panel_row_index = 4;
+					chosen_panel_col_index = 4;
+					}
 				}
-				else if (this->ev.key.code == sf::Keyboard::Tab) //pressing Tab will return to the title screen
+
+				else if (this->current_state == 1 && select_instructions == 1)
 				{
-					this->current_state = 1;
+					if (this->ev.key.code == sf::Keyboard::LShift) //pressing LShift on instructions will return to the title screen
+					{
+						select_instructions = 0;
+					}
+				}
+
+				else if (current_state == 2 && isGameOver == 1)
+				{
+					if (this->ev.key.code == sf::Keyboard::Slash) //return to menu after game over
+					{
+						current_state = 1;
+						isGameOver = 0;
+						startLevel = 0;
+					}
+					else if (this->ev.key.code == sf::Keyboard::Z) //start new game
+					{
+						isGameOver = 0;
+						startLevel = 1;
+						createGrid();
+					}
+				}
+
+				else if (current_state == 2 && isClearLevel == 1)
+				{
+				if (this->ev.key.code == sf::Keyboard::Slash) //return to menu after clearing level
+				{
+					current_state = 1;
+					isClearLevel = 0;
 					startLevel = 0;
 				}
-			}
-			else if (this->current_state == 3)
-			{
-				if (this->ev.key.code == sf::Keyboard::RShift) //pressing RShift in the 'memo state' brings you to back to the game
+				else if (this->ev.key.code == sf::Keyboard::Z) //start new game
 				{
-					this->current_state = 2;
+					isClearLevel = 0;
+					startLevel = 1;
+					createGrid();
 				}
-			}
-		
-		//Replace above temporary code with this when proper buttons are added
+				}
+
 
 		
-		case sf::Event::MouseButtonPressed:
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
-			{
-				if (current_state == 1 && select_instructions == 0)
+			case sf::Event::MouseButtonPressed:
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
 				{
-					//Check which button the mouse is over if the mouse is left-clicked
-					if (this->lvl1Sprite.getGlobalBounds().contains(this->mousePosView)) { 
-						this->current_lv = 1;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->lvl2Sprite.getGlobalBounds().contains(this->mousePosView)) {
-						this->current_lv = 2;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->lvl3Sprite.getGlobalBounds().contains(this->mousePosView)) {
-						this->current_lv = 3;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->lvl4Sprite.getGlobalBounds().contains(this->mousePosView)) {
-						this->current_lv = 4;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->lvl5Sprite.getGlobalBounds().contains(this->mousePosView)) {
-						this->current_lv = 5;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->lvl6Sprite.getGlobalBounds().contains(this->mousePosView)) {
-						this->current_lv = 6;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->lvl7Sprite.getGlobalBounds().contains(this->mousePosView)) {
-						this->current_lv = 7;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->lvl8Sprite.getGlobalBounds().contains(this->mousePosView)) {
-						this->current_lv = 8;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->marathonSprite.getGlobalBounds().contains(this->mousePosView)) {
-						//once marathom mode is implemented
-						//this->current_lv = 1;
-						//this->lv_or_marathon = 1;
-						//this->current_state = 2;
-						//this->startLevel = 1;
+					if (current_state == 1 && select_instructions == 0)
+					{
+						//Check which button the mouse is over if the mouse is left-clicked
+						if (this->lvl1Sprite.getGlobalBounds().contains(this->mousePosView)) { 
+							this->current_lv = 1;
+							this->lv_or_marathon = 0;
+							this->current_state = 2;
+							this->startLevel = 1;
+						}
+						else if (this->lvl2Sprite.getGlobalBounds().contains(this->mousePosView)) {
+							this->current_lv = 2;
+							this->lv_or_marathon = 0;
+							this->current_state = 2;
+							this->startLevel = 1;
+						}
+						else if (this->lvl3Sprite.getGlobalBounds().contains(this->mousePosView)) {
+							this->current_lv = 3;
+							this->lv_or_marathon = 0;
+							this->current_state = 2;
+							this->startLevel = 1;
+						}
+						else if (this->lvl4Sprite.getGlobalBounds().contains(this->mousePosView)) {
+							this->current_lv = 4;
+							this->lv_or_marathon = 0;
+							this->current_state = 2;
+							this->startLevel = 1;
+						}
+						else if (this->lvl5Sprite.getGlobalBounds().contains(this->mousePosView)) {
+							this->current_lv = 5;
+							this->lv_or_marathon = 0;
+							this->current_state = 2;
+							this->startLevel = 1;
+						}
+						else if (this->lvl6Sprite.getGlobalBounds().contains(this->mousePosView)) {
+							this->current_lv = 6;
+							this->lv_or_marathon = 0;
+							this->current_state = 2;
+							this->startLevel = 1;
+						}
+						else if (this->lvl7Sprite.getGlobalBounds().contains(this->mousePosView)) {
+							this->current_lv = 7;
+							this->lv_or_marathon = 0;
+							this->current_state = 2;
+							this->startLevel = 1;
+						}
+						else if (this->lvl8Sprite.getGlobalBounds().contains(this->mousePosView)) {
+							this->current_lv = 8;
+							this->lv_or_marathon = 0;
+							this->current_state = 2;
+							this->startLevel = 1;
+						}
+						else if (this->marathonSprite.getGlobalBounds().contains(this->mousePosView)) {
+							//once marathom mode is implemented
+							//this->current_lv = 1;
+							//this->lv_or_marathon = 1;
+							//this->current_state = 2;
+							//this->startLevel = 1;
 
-						//for now, use to trigger instructions
-						this->select_instructions = 1;
+							//for now, use to trigger instructions
+							this->select_instructions = 1;
+						}
 					}
-				}
 
-				/*
-				* need to make a button to return to menu, clicking anywhere on page doesn't work
-				if (current_state == 1 && select_instructions == 1) //if currently viewing instructions
-				{		
-					click on return button  to return to main menu
+					/*
+					* need to make a button to return to menu, clicking anywhere on page doesn't work
+					if (current_state == 1 && select_instructions == 1) //if currently viewing instructions
+					{		
+						click on return button  to return to main menu
+					}
+					*/
 				}
-				*/
-			}
 		}
 	}
 }
@@ -590,6 +762,9 @@ void Game::createGrid()
 		this->isGameOver = 0;
 		this->isQuitGame = 0;
 		this->isClearLevel = 0;
+		this->chosen_panel_row_index = 99;
+		this->chosen_panel_col_index = 99;
+		this->current_lv_points = 1;
 		this->current_num_2x_found = 0;
 		this->current_num_3x_found = 0;
 
@@ -715,7 +890,7 @@ void Game::createGrid()
 				}
 				break;
 			}
-			/*
+			
 			case 4: //level 4
 			{
 				int combo_choice = rand() % 4;
@@ -881,7 +1056,7 @@ void Game::createGrid()
 				}
 				break;
 			}
-			*/
+			
 		}
 
 		//set bombs and multiplier numbers on matrix
@@ -919,6 +1094,59 @@ void Game::createGrid()
 		}
 
 		this->startLevel = 0;
+	}
+}
+
+void Game::updateGrid()
+{
+	//if new level started, initialize grid
+	if (current_state == 2 && isQuitGame == 0 && isGameOver == 0 && startLevel == 1)
+	{
+		this->createGrid();
+	}
+
+	//while in the middle of a level
+	if (current_state == 2 && isQuitGame == 0 && isGameOver == 0 && startLevel == 0)
+	{
+		if (chosen_panel_row_index != 99 && chosen_panel_col_index != 99)
+		{
+			chosen_panel_value = lv_grid[chosen_panel_row_index][chosen_panel_col_index];
+
+			//if the panel you clicked on is not yet flipped
+			if (is_flipped_grid[chosen_panel_row_index][chosen_panel_col_index] == 0) 
+			{
+				if (chosen_panel_value == 0)
+				{
+					current_lv_points *= chosen_panel_value;
+					isGameOver = 1;//trigger game over
+				}
+
+				else if (chosen_panel_value == 1)
+				{
+					current_lv_points *= chosen_panel_value;
+				}
+
+				else if (chosen_panel_value == 2)
+				{
+					current_lv_points *= chosen_panel_value;
+					current_num_2x_found++;
+				}
+
+				else if (chosen_panel_value == 3)
+				{
+					current_lv_points *= chosen_panel_value;
+					current_num_3x_found++;
+				}
+
+				is_flipped_grid[chosen_panel_row_index][chosen_panel_col_index] = 1; //mark panel as flipped
+			}
+		}
+
+		//if all 2x and 3x cards are found, player wins level
+		if (this->current_num_2x == current_num_2x_found && this->current_num_3x == current_num_3x_found) 
+		{
+			this->isClearLevel = 1;
+		}
 	}
 }
 
@@ -1035,6 +1263,53 @@ void Game::renderText()
 
 }
 
+void Game::render_flipped_panel()
+{
+	if (current_state == 2)
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			for (int j = 0; j < 5; j++)
+			{
+				//if panel is flipped, print number
+				if (is_flipped_grid[i][j] == 1)
+				{
+					if (lv_grid[i][j] == 0)
+					{
+						number_bomb.setPosition(100 + (99 * j), 100 + (99 * i));
+						this->window->draw(number_bomb);
+					}
+
+					else if (lv_grid[i][j] == 1)
+					{
+						number_1.setPosition(100 + (99 * j), 100 + (99 * i));
+						this->window->draw(number_1);
+					}
+
+					else if (lv_grid[i][j] == 2)
+					{
+						number_2.setPosition(100 + (99 * j), 100 + (99 * i));
+						this->window->draw(number_2);
+					}
+
+					else if (lv_grid[i][j] == 3)
+					{
+						number_3.setPosition(100 + (99 * j), 100 + (99 * i));
+						this->window->draw(number_3);
+					}
+				}
+
+				//if panel is not yet flipped, print '?' to panel
+				else
+				{
+					ques_mark.setPosition(100 + (99 * j), 100 + (99 * i));
+					this->window->draw(ques_mark);
+				}
+			}
+		}
+	}
+}
+
 /*
 void Game::renderGrid()
 {
@@ -1053,8 +1328,6 @@ void Game::renderGrid()
 
 void Game::renderButtons()
 {
-	this->window->draw(this->mainbgSprite);
-
 	if (this->current_state == 1 && select_instructions == 0)
 	{
 		//split the screen into 7 columns and 13 rows
@@ -1092,18 +1365,19 @@ void Game::update()
 	//Event Polling
 	this->pollEvents();
 	this->updateMousePosition();
-	createGrid();
+	updateGrid();
 	updateText();
 }
 
 void Game::render()
 {
 	//Render game objects(window, tiles, scoreboard, etc.)
-	this->window->clear(sf::Color::White); 
+	this->window->clear(sf::Color(34, 65, 123, 255));
 
 	this->renderButtons();
 	//renderGrid();
 	renderText();
+	render_flipped_panel();
 
 	this->window->display();
 }

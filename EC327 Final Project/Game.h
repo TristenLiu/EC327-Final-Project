@@ -37,6 +37,8 @@ private:
 	sf::Text bombs_r1, bombs_r2, bombs_r3, bombs_r4, bombs_r5, bombs_c1, bombs_c2, bombs_c3, bombs_c4, bombs_c5,
 		card_total_r1, card_total_r2, card_total_r3, card_total_r4, card_total_r5,
 		card_total_c1, card_total_c2, card_total_c3, card_total_c4, card_total_c5;
+	sf::Text number_1, number_2, number_3, number_bomb, ques_mark;
+
 
 	sf::Font Roboto;
 
@@ -93,18 +95,17 @@ public:
 
 	//Functions
 	void updateMousePosition();
-	
-
 	void pollEvents();
 	void updateText();
 	void createGrid();
-	//void updateGrid();
+	void updateGrid();
 
 	void update();
 
 	void renderButtons();
 	void renderText();
 	//void renderGrid();
+	void render_flipped_panel();
 
 	void render();
 };
