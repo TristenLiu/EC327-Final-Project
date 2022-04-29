@@ -4,7 +4,7 @@
 #include <sstream>
 #include <ctime>
 #include <cstdlib>
-#include <vector>	
+	
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -29,23 +29,23 @@ private:
 	sf::Event ev;
 
 	//Text and fonts
-	sf::Text gameTitle;
-	sf::Text text_current_lv_num;
+	sf::Text gameTitle, menuPrompt;
 	sf::Text text_current_lv_score;
 	sf::Text messages;
 	sf::Text instructions;
-	sf::Text bombs_r1, bombs_r2, bombs_r3, bombs_r4, bombs_r5, bombs_c1, bombs_c2, bombs_c3, bombs_c4, bombs_c5,
-		card_total_r1, card_total_r2, card_total_r3, card_total_r4, card_total_r5,
-		card_total_c1, card_total_c2, card_total_c3, card_total_c4, card_total_c5;
+	sf::Text quit_instructions;
+	sf::Text bombs_r1, card_total_r1, bombs_c1, card_total_c1;
 	sf::Text number_1, number_2, number_3, number_bomb, ques_mark;
 
+	sf::Font Roboto, Candaraz;
 
-	sf::Font Roboto;
+	//sf::Texture lvl1Texture, lvl2Texture, lvl3Texture, lvl4Texture, lvl5Texture, lvl6Texture, lvl7Texture, lvl8Texture, lvl9Texture, lvl10Texture, marathonTexture;
+	//sf::Sprite lvl1Sprite, lvl2Sprite, lvl3Sprite, lvl4Sprite, lvl5Sprite, lvl6Sprite, lvl7Sprite, lvl8Sprite, lvl9Sprite, lvl10Sprite, marathonSprite;
+	sf::Texture bomb_texture;
+	sf::Sprite bomb_sprite;
 
-	sf::Texture mainbgTexture, lvl1Texture, lvl2Texture, lvl3Texture, lvl4Texture, lvl5Texture, lvl6Texture, lvl7Texture, lvl8Texture, lvl9Texture, lvl10Texture, marathonTexture;
-	sf::Sprite mainbgSprite, lvl1Sprite, lvl2Sprite, lvl3Sprite, lvl4Sprite, lvl5Sprite, lvl6Sprite, lvl7Sprite, lvl8Sprite, lvl9Sprite, lvl10Sprite, marathonSprite;
-	sf::Texture gridTexture;
-	sf::Sprite gridSprite;
+	//Shapes (for panels)
+	sf::RectangleShape panel_facedown, panel_number, panel_bomb, panel_totals;
 
 	//Mouse positions
 	sf::Vector2i mousePos;
@@ -60,7 +60,6 @@ private:
 	unsigned current_lv_points;
 	unsigned current_marathon_total;
 	bool isGameOver; //1 if game over
-	bool isQuitGame; //1 if game is quit (mainly used for marathon mode; the points collected so far will be added to total score)
 	bool isClearLevel; // 1 if level is cleared
 	bool startLevel; //flag to generate a new grid, this is so the grid doean't get re-initiated every frame
 
@@ -75,14 +74,15 @@ private:
 	int current_num_3x;
 	int current_num_2x_found;
 	int current_num_3x_found;
-	//int memo_array[4]; used to keep track of active memo stamps while in memo mode
+	
 
 	//Private Functions
 	void initVar();
-	void initTexture();
-	void initSprite();
+	//void initTexture();
+	//void initSprite();
 	void initFont();
 	void initText();
+	void initShapes();
 	void initWindow();
 
 public:
@@ -94,7 +94,7 @@ public:
 	const bool isRunning() const;
 
 	//Functions
-	void updateMousePosition();
+	//void updateMousePosition();
 	void pollEvents();
 	void updateText();
 	void createGrid();
@@ -102,7 +102,7 @@ public:
 
 	void update();
 
-	void renderButtons();
+	//void renderButtons();
 	void renderText();
 	//void renderGrid(); removed background and grid
 	void render_flipped_panel();
