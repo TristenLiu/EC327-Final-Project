@@ -7,7 +7,7 @@ void Game::initVar()
 	this->window = nullptr;
 	this->current_state = 1; //1 = main menu, 2 = game board
 	this->select_instructions = 0;
-	this->select_Quit = 0;
+	this->select_Quit = false;
 	this->lv_or_marathon = 0; //0 = individual level mode, 1 = marathon mode
 	this->current_lv = 1;
 	this->current_lv_points = 1;
@@ -23,8 +23,7 @@ void Game::initVar()
 			is_flipped_grid[i][j] = 0;
 		}
 	}
-	this->bomb_texture.loadFromFile("images/bomb_small.png");
-	this->bomb_sprite.setTexture(bomb_texture);
+
 }
 
 
@@ -34,11 +33,16 @@ void Game::initTexture()
 	this->easyTexture.loadFromFile("images/EASY.png");
 	this->mediumTexture.loadFromFile("images/MEDIUM.png");
 	this->hardTexture.loadFromFile("images/HARD.png");
-	this->quitTexture.loadFromFile("images/QUIT.png");
-	this->memoTexture.loadFromFile("images/MEMO.png");
+	this->marathonTexture.loadFromFile("images/Marathon.png");
+	this->quitSTexture.loadFromFile("images/QUITSMALL.png");
+	this->quitLTexture.loadFromFile("images/QUITLARGE.png");
+	this->quitCTexture.loadFromFile("images/quitConfirm.png");
 	this->yesTexture.loadFromFile("images/YES.png");
 	this->noTexture.loadFromFile("images/NO.png");
-	this->marathonTexture.loadFromFile("images/Marathon.png");
+	this->instTexture.loadFromFile("images/INSTRUCTIONS.png");
+	this->bomb_texture.loadFromFile("images/bomb_small.png");
+	this->lossTexture.loadFromFile("images/gameOver.png");
+	this->winTexture.loadFromFile("images/gameWin.png");
 }
 
 void Game::initSprite()
@@ -47,14 +51,19 @@ void Game::initSprite()
 	//Each checkerboard square is 150px
 
 	//button sprites are 256x128 px
-	this->easySprite.setTexture(easyTexture);			this->easySprite.setScale(.50f, .50f);
-	this->mediumSprite.setTexture(mediumTexture);		this->mediumSprite.setScale(.50f, .50f);
-	this->hardSprite.setTexture(hardTexture);			this->hardSprite.setScale(.50f, .50f);
-	this->quitSprite.setTexture(quitTexture);			this->quitSprite.setScale(.50f, .50f);
-	this->memoSprite.setTexture(memoTexture);			this->memoSprite.setScale(.50f, .50f);
-	this->yesSprite.setTexture(yesTexture);				this->yesSprite.setScale(.50f, .50f);
+	this->easySprite.setTexture(easyTexture);			this->easySprite.setScale(.50f, .50f);			
+	this->mediumSprite.setTexture(mediumTexture);		this->mediumSprite.setScale(.50f, .50f);		
+	this->hardSprite.setTexture(hardTexture);			this->hardSprite.setScale(.50f, .50f);			
+	this->marathonSprite.setTexture(marathonTexture);	this->marathonSprite.setScale(0.50f, 0.50f);	
+	this->quitSSprite.setTexture(quitSTexture);			this->quitSSprite.setScale(.75f, .75f);
+	this->quitLSprite.setTexture(quitLTexture);			this->quitLSprite.setScale(.50f, .50f);
+	this->quitCSprite.setTexture(quitCTexture);			this->quitCSprite.setScale(2.f, 2.f);	
+	this->yesSprite.setTexture(yesTexture);				this->yesSprite.setScale(.50f, .50f);			
 	this->noSprite.setTexture(noTexture);				this->noSprite.setScale(.50f, .50f);
-	this->marathonSprite.setTexture(marathonTexture);	this->marathonSprite.setScale(0.50f, 0.50f);
+	this->instSprite.setTexture(instTexture);			this->instSprite.setScale(.50f, .50f);
+	this->bomb_sprite.setTexture(bomb_texture);
+	this->lossSprite.setTexture(lossTexture);			this->lossSprite.setScale(2.f, 2.f);
+	this->winSprite.setTexture(winTexture);				this->winSprite.setScale(2.f, 2.f);
 }
 
 void Game::initFont()
@@ -71,11 +80,6 @@ void Game::initText()
 	this->gameTitle.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	this->gameTitle.setString("Voltorb Flip V2");
 
-	this->menuPrompt.setFont(Candaraz);
-	this->menuPrompt.setCharacterSize(50);
-	this->menuPrompt.setFillColor(sf::Color::White);
-	this->menuPrompt.setString("Press a number to choose a difficulty level:\n1 - Easy\n2 - Medium\n3 - Hard\n\nPress 9 to view instructions");
-
 	this->text_current_lv_score.setFont(Roboto);
 	this->text_current_lv_score.setCharacterSize(40);
 	this->text_current_lv_score.setFillColor(sf::Color::White);
@@ -85,16 +89,6 @@ void Game::initText()
 	this->instructions.setCharacterSize(24);
 	this->instructions.setFillColor(sf::Color::White);
 	this->instructions.setString("WRITE INSTRUCTIONS HERE, should also note to hit Backspace to return to main menu");
-
-	this->quit_instructions.setFont(Roboto);
-	this->quit_instructions.setCharacterSize(30);
-	this->quit_instructions.setFillColor(sf::Color::White);
-	this->quit_instructions.setString("Press ESCAPE to quit the game\nand return to the main menu");
-
-	this->messages.setFont(Roboto);
-	this->messages.setCharacterSize(30);
-	this->messages.setFillColor(sf::Color::White);
-	this->messages.setString("NONE");
 
 	this->bombs_r1.setFont(Roboto);
 	this->bombs_r1.setCharacterSize(36);
@@ -211,209 +205,11 @@ void Game::pollEvents()
 					{
 						this->current_state = 1;
 						startLevel = 0;
-						isGameOver = 0;
-					}
-
-					else if (this->ev.key.code == sf::Keyboard::A)
-					{
-						chosen_panel_row_index = 0;
-						chosen_panel_col_index = 0;
-					}
-					else if (this->ev.key.code == sf::Keyboard::B)
-					{
-						chosen_panel_row_index = 0;
-						chosen_panel_col_index = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::C)
-					{
-						chosen_panel_row_index = 0;
-						chosen_panel_col_index = 2;
-					}
-					else if (this->ev.key.code == sf::Keyboard::D)
-					{
-						chosen_panel_row_index = 0;
-						chosen_panel_col_index = 3;
-					}
-					else if (this->ev.key.code == sf::Keyboard::E)
-					{
-						chosen_panel_row_index = 0;
-						chosen_panel_col_index = 4;
-					}
-					else if (this->ev.key.code == sf::Keyboard::F)
-					{
-						chosen_panel_row_index = 1;
-						chosen_panel_col_index = 0;
-					}
-					else if (this->ev.key.code == sf::Keyboard::G)
-					{
-						chosen_panel_row_index = 1;
-						chosen_panel_col_index = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::H)
-					{
-						chosen_panel_row_index = 1;
-						chosen_panel_col_index = 2;
-					}
-					else if (this->ev.key.code == sf::Keyboard::I)
-					{
-						chosen_panel_row_index = 1;
-						chosen_panel_col_index = 3;
-					}
-					else if (this->ev.key.code == sf::Keyboard::J)
-					{
-						chosen_panel_row_index = 1;
-						chosen_panel_col_index = 4;
-					}
-					else if (this->ev.key.code == sf::Keyboard::K)
-					{
-						chosen_panel_row_index = 2;
-						chosen_panel_col_index = 0;
-					}
-					else if (this->ev.key.code == sf::Keyboard::L)
-					{
-						chosen_panel_row_index = 2;
-						chosen_panel_col_index = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::M)
-					{
-						chosen_panel_row_index = 2;
-						chosen_panel_col_index = 2;
-					}
-					else if (this->ev.key.code == sf::Keyboard::N)
-					{
-						chosen_panel_row_index = 2;
-						chosen_panel_col_index = 3;
-					}
-					else if (this->ev.key.code == sf::Keyboard::O)
-					{
-						chosen_panel_row_index = 2;
-						chosen_panel_col_index = 4;
-					}
-					else if (this->ev.key.code == sf::Keyboard::P)
-					{
-						chosen_panel_row_index = 3;
-						chosen_panel_col_index = 0;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Q)
-					{
-						chosen_panel_row_index = 3;
-						chosen_panel_col_index = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::R)
-					{
-						chosen_panel_row_index = 3;
-						chosen_panel_col_index = 2;
-					}
-					else if (this->ev.key.code == sf::Keyboard::S)
-					{
-						chosen_panel_row_index = 3;
-						chosen_panel_col_index = 3;
-					}
-					else if (this->ev.key.code == sf::Keyboard::T)
-					{
-						chosen_panel_row_index = 3;
-						chosen_panel_col_index = 4;
-					}
-					else if (this->ev.key.code == sf::Keyboard::U)
-					{
-					chosen_panel_row_index = 4;
-					chosen_panel_col_index = 0;
-					}
-					else if (this->ev.key.code == sf::Keyboard::V)
-					{
-					chosen_panel_row_index = 4;
-					chosen_panel_col_index = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::W)
-					{
-					chosen_panel_row_index = 4;
-					chosen_panel_col_index = 2;
-					}
-					else if (this->ev.key.code == sf::Keyboard::X)
-					{
-					chosen_panel_row_index = 4;
-					chosen_panel_col_index = 3;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Y)
-					{
-					chosen_panel_row_index = 4;
-					chosen_panel_col_index = 4;
+						isGameOver = false;
 					}
 					else if (this->ev.key.code == sf::Keyboard::Escape)
 					{
-					select_Quit = 1;
-					}
-				}
-
-				else if (this->current_state == 1 && select_instructions == 0)
-				{
-					if (this->ev.key.code == sf::Keyboard::Num1) 
-					{
-						this->current_lv = 1;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-
-					else if (this->ev.key.code == sf::Keyboard::Num2)
-					{
-						this->current_lv = 2;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Num2)
-					{
-						this->current_lv = 2;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Num3)
-					{
-						this->current_lv = 3;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Num4)
-					{
-						this->current_lv = 4;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Num5)
-					{
-						this->current_lv = 5;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Num6)
-					{
-						this->current_lv = 6;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Num7)
-					{
-						this->current_lv = 7;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Num8)
-					{
-						this->current_lv = 8;
-						this->lv_or_marathon = 0;
-						this->current_state = 2;
-						this->startLevel = 1;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Num9)
-					{
-						select_instructions = 1;
+					select_Quit = true;
 					}
 				}
 
@@ -425,17 +221,17 @@ void Game::pollEvents()
 					}
 				}
 
-				else if (current_state == 2 && isGameOver == 1)
+				else if (current_state == 2 && isGameOver)
 				{
 					if (this->ev.key.code == sf::Keyboard::Backspace) //return to menu after game over
 					{
 						current_state = 1;
-						isGameOver = 0;
+						isGameOver = false;
 						startLevel = 0;
 					}
 					else if (this->ev.key.code == sf::Keyboard::Space) //start new game
 					{
-						isGameOver = 0;
+						isGameOver = false;
 						startLevel = 1;
 					}
 				}
@@ -455,95 +251,147 @@ void Game::pollEvents()
 					}
 				}
 
-				else if (current_state == 2 && select_Quit == 1)
+				else if (current_state == 2 && select_Quit)
 				{
 					if (this->ev.key.code == sf::Keyboard::Space) //go back to game
 					{
-						select_Quit = 0;
+						this->select_Quit = false;
 					}
 					else if (this->ev.key.code == sf::Keyboard::Backspace) //return to menu
 					{
-						current_state = 1;
-						select_Quit = 0;
+						this->current_state = 1;
+						this->select_Quit = false;
 					}
 				}
+				break;
 
-
-		/*
 			case sf::Event::MouseButtonPressed:
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
 				{
-					if (current_state == 1 && select_instructions == 0)
+					if (current_state == 1)
 					{
-						//Check which button the mouse is over if the mouse is left-clicked
-						if (this->lvl1Sprite.getGlobalBounds().contains(this->mousePosView)) { 
-							this->current_lv = 1;
-							this->lv_or_marathon = 0;
-							this->current_state = 2;
-							this->startLevel = 1;
+						if (!this->select_instructions && !this->select_Quit)
+						{
+							//Check which button the mouse is over if the mouse is left-clicked
+							if (this->easySprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 1;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->mediumSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 2;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->hardSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 3;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->marathonSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 1;
+								this->lv_or_marathon = 1;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->instSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->select_instructions = 1;
+								this->select_Quit = false;
+							}
+							else if (this->quitLSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->select_Quit = true;
+							}
 						}
-						else if (this->lvl2Sprite.getGlobalBounds().contains(this->mousePosView)) {
-							this->current_lv = 2;
-							this->lv_or_marathon = 0;
-							this->current_state = 2;
-							this->startLevel = 1;
+						else if (this->select_instructions) //if currently viewing instructions
+						{
+							if (this->quitSSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->select_instructions = 0;
+							}
 						}
-						else if (this->lvl3Sprite.getGlobalBounds().contains(this->mousePosView)) {
-							this->current_lv = 3;
-							this->lv_or_marathon = 0;
-							this->current_state = 2;
-							this->startLevel = 1;
-						}
-						else if (this->lvl4Sprite.getGlobalBounds().contains(this->mousePosView)) {
-							this->current_lv = 4;
-							this->lv_or_marathon = 0;
-							this->current_state = 2;
-							this->startLevel = 1;
-						}
-						else if (this->lvl5Sprite.getGlobalBounds().contains(this->mousePosView)) {
-							this->current_lv = 5;
-							this->lv_or_marathon = 0;
-							this->current_state = 2;
-							this->startLevel = 1;
-						}
-						else if (this->lvl6Sprite.getGlobalBounds().contains(this->mousePosView)) {
-							this->current_lv = 6;
-							this->lv_or_marathon = 0;
-							this->current_state = 2;
-							this->startLevel = 1;
-						}
-						else if (this->lvl7Sprite.getGlobalBounds().contains(this->mousePosView)) {
-							this->current_lv = 7;
-							this->lv_or_marathon = 0;
-							this->current_state = 2;
-							this->startLevel = 1;
-						}
-						else if (this->lvl8Sprite.getGlobalBounds().contains(this->mousePosView)) {
-							this->current_lv = 8;
-							this->lv_or_marathon = 0;
-							this->current_state = 2;
-							this->startLevel = 1;
-						}
-						else if (this->marathonSprite.getGlobalBounds().contains(this->mousePosView)) {
-							//once marathom mode is implemented
-							//this->current_lv = 1;
-							//this->lv_or_marathon = 1;
-							//this->current_state = 2;
-							//this->startLevel = 1;
-
-							//for now, use to trigger instructions
-							this->select_instructions = 1;
+						else if (this->select_Quit)
+						{
+							if (this->yesSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->window->close();
+							}
+							else if (this->noSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->select_Quit = false;
+							}
 						}
 					}
+					else if (this->current_state == 2)
+					{
+						if (!this->select_Quit && !this->isGameOver && !this->isClearLevel)
+						{
+							int colNum = (this->mousePosView.x - 100) / 99;
+							int rowNum = (this->mousePosView.y - 100) / 99;
 
-					
-					* need to make a button to return to menu, clicking anywhere on page doesn't work
-					if (current_state == 1 && select_instructions == 1) //if currently viewing instructions
-					{		
-						click on return button  to return to main menu
+							if (colNum < 5 && rowNum < 5)
+							{
+								if (rowNum == 0)		chosen_panel_row_index = 0;
+								else if (rowNum == 1)	chosen_panel_row_index = 1;
+								else if (rowNum == 2)	chosen_panel_row_index = 2;
+								else if (rowNum == 3)	chosen_panel_row_index = 3;
+								else if (rowNum == 4)	chosen_panel_row_index = 4;
+
+								if (colNum == 0)		chosen_panel_col_index = 0;
+								else if (colNum == 1)	chosen_panel_col_index = 1;
+								else if (colNum == 2)	chosen_panel_col_index = 2;
+								else if (colNum == 3)	chosen_panel_col_index = 3;
+								else if (colNum == 4)	chosen_panel_col_index = 4;
+							}
+							else if (this->quitSSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->select_Quit = true; 
+							}
+						}
+						else if (this->select_Quit)
+						{
+							if (this->yesSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_state = 1;
+								this->select_Quit = false;
+							}
+							else if (this->noSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->select_Quit = false;
+							}
+						}
+						else if (this->isGameOver || this->isClearLevel)
+						{
+							//game over and game clear use same menu
+
+							if (this->yesSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->startLevel = 1;
+								this->isGameOver = false;
+							}
+							else if (this->noSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_state = 1;
+								this->isGameOver = false;
+							}
+						}
 					}
-					
-				}*/
+				}
+				break;
+			default: 
+				break;
 		}
 	}
 }
@@ -629,20 +477,6 @@ void Game::updateText()
 		}
 	}
 
-	//Setting text for messages - message will be different depending on condition
-
-	if (current_state == 2 && isGameOver == 1)
-	{
-		this->messages.setString("Game Over!\nWant to play again?\nPress SPACE to continue\nor BACKSPACE to quit");
-	}
-	else if (current_state == 2 && select_Quit == 1)
-	{
-		this->messages.setString("Are you sure you want to quit?\nPress SPACE to continue\nor BACKSPACE to quit");
-	}
-	else if (current_state == 2 && isClearLevel == 1)
-	{
-		this->messages.setString("You won the game!\nWant to play again?\nPress SPACE to continue\nor BACKSPACE to quit");
-	}
 }
 
 void Game::createGrid()
@@ -651,9 +485,9 @@ void Game::createGrid()
 	if (current_state == 2 && startLevel == 1)
 	{
 		//reset flags and variables to 0
-		this->isGameOver = 0;
-		this->select_Quit = 0;
-		this->isClearLevel = 0;
+		this->isGameOver = false;
+		this->select_Quit = false;
+		this->isClearLevel = false;
 		this->chosen_panel_row_index = 99;
 		this->chosen_panel_col_index = 99;
 		this->current_lv_points = 1;
@@ -960,7 +794,7 @@ void Game::createGrid()
 void Game::updateGrid()
 {
 	
-	if (current_state == 2 && isGameOver == 0 && select_Quit == 0)
+	if (current_state == 2 && !isGameOver && !select_Quit)
 	{	
 		//if new level started, initialize grid
 		if (startLevel == 1)
@@ -981,7 +815,7 @@ void Game::updateGrid()
 					if (chosen_panel_value == 0)
 					{
 						current_lv_points *= chosen_panel_value;
-						isGameOver = 1;//trigger game over
+						isGameOver = true;//trigger game over
 					}
 
 					else if (chosen_panel_value == 1)
@@ -1017,16 +851,18 @@ void Game::updateGrid()
 
 void Game::renderText()
 {
+	int colWidth = this->window->getSize().x / 7;
+	int rowHeight = this->window->getSize().y / 13;
 	if (current_state == 1 && select_instructions == 0)
 	{
 		//Display name of game on menu
-		int colwidth = this->window->getSize().x / 7;
-		int rowheight = this->window->getSize().y / 13;
-		gameTitle.setPosition(this->window->getSize().x / 2 - gameTitle.getLocalBounds().width / 2, rowheight * 1);
+		gameTitle.setPosition(this->window->getSize().x / 2 - gameTitle.getLocalBounds().width / 2, rowHeight * 1);
 		this->window->draw(this->gameTitle);
 
+		/*
 		menuPrompt.setPosition(150, 200);
 		this->window->draw(this->menuPrompt);
+		*/
 	}
 
 	else if (current_state == 1 && select_instructions == 1)
@@ -1041,32 +877,6 @@ void Game::renderText()
 		//Display current score and level on game screen
 		text_current_lv_score.setPosition(800.f, 50.f); 
 		this->window->draw(this->text_current_lv_score);
-
-		quit_instructions.setPosition(800.f, 250.f); 
-		this->window->draw(this->quit_instructions);
-
-		if (isGameOver == 1)
-		{
-			//Display game over message
-			messages.setPosition(800.f, 500.f); //set position
-			this->window->draw(this->messages);
-		}
-
-		if (select_Quit == 1)
-		{
-			//Display confirm quit message
-			messages.setPosition(800.f, 500.f); //set position
-			this->window->draw(this->messages);
-		}
-
-		if (isClearLevel == 1)
-		{
-			//Display cleared level message
-			messages.setPosition(800.f, 500.f); //set position
-			this->window->draw(this->messages);
-		}
-		//also need to render yes/no buttons for these (in render buttons function)
-		//and to change states with yes/no is chosen (in updateGrid function)
 	}
 
 }
@@ -1094,7 +904,7 @@ void Game::render_flipped_panel()
 		{
 			for (int j = 0; j < 5; j++)
 			{
-				if (isGameOver == 1 || is_flipped_grid[i][j] == 1 || isClearLevel == 1)
+				if (isGameOver == true || is_flipped_grid[i][j] == 1 || isClearLevel == 1)
 				{
 					if (lv_grid[i][j] == 0)
 					{
@@ -1117,15 +927,17 @@ void Game::render_flipped_panel()
 					}
 				}
 
-				else if (isGameOver == 0 && is_flipped_grid[i][j] == 0)
+				else if (!isGameOver && is_flipped_grid[i][j] == 0)
 				{
 					panel_facedown.setPosition(100 + (99 * j), 100 + (99 * i));
 					this->window->draw(panel_facedown);
 
+					/*
 					std::string s(1, ((char)(65 + i * 5 + j)));
 					ques_mark.setString(s);
 					ques_mark.setPosition(135 + (99 * j), 115 + (99 * i));
 					this->window->draw(ques_mark);
+					*/
 				}
 				
 			}
@@ -1148,46 +960,96 @@ void Game::renderGrid()
 }
 */
 
-/*
+
 void Game::renderButtons()
 {
-	if (this->current_state == 1 && select_instructions == 0)
-	{
-		//split the screen into 7 columns and 13 rows
-		int colwidth = this->window->getSize().x / 7;
-		int rowheight = this->window->getSize().y / 13;
+	//split the screen into 7 columns and 13 rows
+	int colWidth = this->window->getSize().x / 7;
+	int rowHeight = this->window->getSize().y / 13;
 
-		lvl1Sprite.setPosition(colwidth * 1, rowheight * 3);
-		this->window->draw(lvl1Sprite);
-		lvl2Sprite.setPosition(colwidth * 3, rowheight * 3);
-		this->window->draw(lvl2Sprite);
-		lvl3Sprite.setPosition(colwidth * 1, rowheight * 5);
-		this->window->draw(lvl3Sprite);
-		lvl4Sprite.setPosition(colwidth * 3, rowheight * 5);
-		this->window->draw(lvl4Sprite);
-		lvl5Sprite.setPosition(colwidth * 1, rowheight * 7);
-		this->window->draw(lvl5Sprite);
-		lvl6Sprite.setPosition(colwidth * 3, rowheight * 7);
-		this->window->draw(lvl6Sprite);
-		lvl7Sprite.setPosition(colwidth * 1, rowheight * 9);
-		this->window->draw(lvl7Sprite);
-		lvl8Sprite.setPosition(colwidth * 3, rowheight * 9);
-		this->window->draw(lvl8Sprite);
-		lvl9Sprite.setPosition(colwidth * 1, rowheight * 11);
-		this->window->draw(lvl9Sprite);
-		lvl10Sprite.setPosition(colwidth * 3, rowheight * 11);
-		this->window->draw(lvl10Sprite);
-		marathonSprite.setPosition(colwidth * 5, rowheight * 9);
-		this->window->draw(marathonSprite);
+	if (this->current_state == 1)
+	{
+		if (!this->select_instructions && !this->select_Quit)
+		{
+			this->easySprite.setPosition(colWidth * 1, rowHeight * 3);
+			this->window->draw(easySprite);
+			this->mediumSprite.setPosition(colWidth * 1, rowHeight * 5);
+			this->window->draw(mediumSprite);
+			this->hardSprite.setPosition(colWidth * 1, rowHeight * 7);
+			this->window->draw(hardSprite);
+			this->marathonSprite.setPosition(colWidth * 1, rowHeight * 9);
+			this->window->draw(marathonSprite);
+			this->instSprite.setPosition(colWidth * 4, rowHeight * 4);
+			this->window->draw(instSprite);
+			this->quitLSprite.setPosition(colWidth * 4, rowHeight * 8);
+			this->window->draw(quitLSprite);
+		}
+		else if (this->select_instructions)
+		{
+			this->quitSSprite.setPosition(colWidth * 5.5, rowHeight * 11);
+			this->window->draw(quitSSprite);
+		}
+		else if (this->select_Quit)
+		{
+			//Display confirm quit message
+
+			this->quitCSprite.setPosition(this->window->getSize().x / 2 - this->quitCSprite.getLocalBounds().width, 
+										  this->window->getSize().y / 2 - this->quitCSprite.getLocalBounds().height);
+			this->window->draw(quitCSprite);
+			this->yesSprite.setPosition(this->window->getSize().x / 2 - 192, this->window->getSize().y / 2 + 25);
+			this->window->draw(yesSprite);
+			this->noSprite.setPosition(this->window->getSize().x / 2 + 64, this->window->getSize().y / 2 + 25);
+			this->window->draw(noSprite);
+		}
+	}
+	else if (this->current_state == 2)
+	{
+		if (!select_Quit && !this->isGameOver && !this->isClearLevel)
+		{
+			this->quitSSprite.setPosition(colWidth * 5.5, rowHeight * 11);
+			this->window->draw(quitSSprite);
+		}
+		else if (this->select_Quit == 1)
+		{
+			//Display confirm quit message
+
+			this->quitCSprite.setPosition(this->window->getSize().x / 2 - this->quitCSprite.getLocalBounds().width, 
+										  this->window->getSize().y / 2 - this->quitCSprite.getLocalBounds().height);
+			this->window->draw(quitCSprite);
+			this->yesSprite.setPosition(this->window->getSize().x / 2 - 192, this->window->getSize().y / 2 + 25);
+			this->window->draw(yesSprite);
+			this->noSprite.setPosition(this->window->getSize().x / 2 + 64, this->window->getSize().y / 2 + 25);
+			this->window->draw(noSprite);
+		}
+		else if (this->isGameOver) 
+		{
+			this->lossSprite.setPosition(this->window->getSize().x / 2 - this->lossSprite.getLocalBounds().width,
+										 this->window->getSize().y / 2 - this->lossSprite.getLocalBounds().height);
+			this->window->draw(lossSprite);
+			this->yesSprite.setPosition(this->window->getSize().x / 2 - 192, this->window->getSize().y / 2 + 25);
+			this->window->draw(yesSprite);
+			this->noSprite.setPosition(this->window->getSize().x / 2 + 64, this->window->getSize().y / 2 + 25);
+			this->window->draw(noSprite);
+		}
+		else if (this->isClearLevel)
+		{
+			this->winSprite.setPosition(this->window->getSize().x / 2 - this->winSprite.getLocalBounds().width,
+										this->window->getSize().y / 2 - this->winSprite.getLocalBounds().height);
+			this->window->draw(winSprite);
+			this->yesSprite.setPosition(this->window->getSize().x / 2 - 192, this->window->getSize().y / 2 + 25);
+			this->window->draw(yesSprite);
+			this->noSprite.setPosition(this->window->getSize().x / 2 + 64, this->window->getSize().y / 2 + 25);
+			this->window->draw(noSprite);
+		}
 	}
 
 }
-*/
+
 void Game::update()
 {
 	//Event Polling
 	this->pollEvents();
-	//this->updateMousePosition();
+	this->updateMousePosition();
 	updateGrid();
 	
 }
@@ -1197,13 +1059,13 @@ void Game::render()
 	//Render game objects(window, tiles, scoreboard, etc.)
 	this->window->clear(sf::Color(34, 65, 123, 255));
 
-	//this->renderButtons();
 	//renderGrid();
 	
 	
 	render_flipped_panel();
 	updateText();
 	renderText();
+	this->renderButtons();
 
 	this->window->display();
 }
