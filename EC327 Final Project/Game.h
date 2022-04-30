@@ -32,10 +32,12 @@ private:
 	sf::Text gameTitle, menuPrompt;
 	sf::Text text_current_lv_score;
 	sf::Text messages;
+	sf::Text instructions_in_game;
+	sf::Text panel_explain;
 	sf::Text instructions;
 	sf::Text quit_instructions;
 	sf::Text bombs_r1, card_total_r1, bombs_c1, card_total_c1;
-	sf::Text number_1, number_2, number_3, number_bomb, ques_mark;
+	sf::Text number_1, number_2, number_3, number_bomb;
 
 	sf::Font Roboto, Candaraz;
 
@@ -62,7 +64,7 @@ private:
 	bool isGameOver; //1 if game over
 	bool isClearLevel; // 1 if level is cleared
 	bool startLevel; //flag to generate a new grid, this is so the grid doean't get re-initiated every frame
-
+	bool select_marathon_continue;
 
 	int lv_grid[5][5];
 	int is_flipped_grid[5][5]; // 0 = unflipped, used to keep track of flipped panels while in the middle of a game
@@ -74,7 +76,8 @@ private:
 	int current_num_3x;
 	int current_num_2x_found;
 	int current_num_3x_found;
-	
+	//int current_num_1x;
+	//int current_num_1x_found;
 
 	//Private Functions
 	void initVar();
