@@ -39,8 +39,8 @@ private:
 
 	sf::Font Roboto, Candaraz;
 
-	//sf::Texture lvl1Texture, lvl2Texture, lvl3Texture, lvl4Texture, lvl5Texture, lvl6Texture, lvl7Texture, lvl8Texture, lvl9Texture, lvl10Texture, marathonTexture;
-	//sf::Sprite lvl1Sprite, lvl2Sprite, lvl3Sprite, lvl4Sprite, lvl5Sprite, lvl6Sprite, lvl7Sprite, lvl8Sprite, lvl9Sprite, lvl10Sprite, marathonSprite;
+	sf::Texture easyTexture, mediumTexture, hardTexture, marathonTexture, quitTexture, memoTexture, yesTexture, noTexture;
+	sf::Sprite easySprite, mediumSprite, hardSprite, marathonSprite, quitSprite, memoSprite, yesSprite, noSprite;
 	sf::Texture bomb_texture;
 	sf::Sprite bomb_sprite;
 
@@ -78,8 +78,8 @@ private:
 
 	//Private Functions
 	void initVar();
-	//void initTexture();
-	//void initSprite();
+	void initTexture();
+	void initSprite();
 	void initFont();
 	void initText();
 	void initShapes();
@@ -94,7 +94,7 @@ public:
 	const bool isRunning() const;
 
 	//Functions
-	//void updateMousePosition();
+	void updateMousePosition();
 	void pollEvents();
 	void updateText();
 	void createGrid();

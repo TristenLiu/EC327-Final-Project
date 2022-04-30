@@ -27,18 +27,17 @@ void Game::initVar()
 	this->bomb_sprite.setTexture(bomb_texture);
 }
 
-/*
+
 void Game::initTexture()
 {
 	//Load Textures from image folder
-	this->lvl1Texture.loadFromFile("images/Level1.png");
-	this->lvl2Texture.loadFromFile("images/Level2.png");
-	this->lvl3Texture.loadFromFile("images/Level3.png");
-	this->lvl4Texture.loadFromFile("images/Level4.png");
-	this->lvl5Texture.loadFromFile("images/Level5.png");
-	this->lvl6Texture.loadFromFile("images/Level6.png");
-	this->lvl7Texture.loadFromFile("images/Level7.png");
-	this->lvl8Texture.loadFromFile("images/Level8.png");
+	this->easyTexture.loadFromFile("images/EASY.png");
+	this->mediumTexture.loadFromFile("images/MEDIUM.png");
+	this->hardTexture.loadFromFile("images/HARD.png");
+	this->quitTexture.loadFromFile("images/QUIT.png");
+	this->memoTexture.loadFromFile("images/MEMO.png");
+	this->yesTexture.loadFromFile("images/YES.png");
+	this->noTexture.loadFromFile("images/NO.png");
 	this->marathonTexture.loadFromFile("images/Marathon.png");
 }
 
@@ -48,17 +47,16 @@ void Game::initSprite()
 	//Each checkerboard square is 150px
 
 	//button sprites are 256x128 px
-	this->lvl1Sprite.setTexture(lvl1Texture);			this->lvl1Sprite.setScale(.50f, .50f);
-	this->lvl2Sprite.setTexture(lvl2Texture);			this->lvl2Sprite.setScale(.50f, .50f);
-	this->lvl3Sprite.setTexture(lvl3Texture);			this->lvl3Sprite.setScale(.50f, .50f);
-	this->lvl4Sprite.setTexture(lvl4Texture);			this->lvl4Sprite.setScale(.50f, .50f);
-	this->lvl5Sprite.setTexture(lvl5Texture);			this->lvl5Sprite.setScale(.50f, .50f);
-	this->lvl6Sprite.setTexture(lvl6Texture);			this->lvl6Sprite.setScale(.50f, .50f);
-	this->lvl7Sprite.setTexture(lvl7Texture);			this->lvl7Sprite.setScale(.50f, .50f);
-	this->lvl8Sprite.setTexture(lvl8Texture);			this->lvl8Sprite.setScale(.50f, .50f);
+	this->easySprite.setTexture(easyTexture);			this->easySprite.setScale(.50f, .50f);
+	this->mediumSprite.setTexture(mediumTexture);		this->mediumSprite.setScale(.50f, .50f);
+	this->hardSprite.setTexture(hardTexture);			this->hardSprite.setScale(.50f, .50f);
+	this->quitSprite.setTexture(quitTexture);			this->quitSprite.setScale(.50f, .50f);
+	this->memoSprite.setTexture(memoTexture);			this->memoSprite.setScale(.50f, .50f);
+	this->yesSprite.setTexture(yesTexture);				this->yesSprite.setScale(.50f, .50f);
+	this->noSprite.setTexture(noTexture);				this->noSprite.setScale(.50f, .50f);
 	this->marathonSprite.setTexture(marathonTexture);	this->marathonSprite.setScale(0.50f, 0.50f);
 }
-*/
+
 void Game::initFont()
 {
 	this->Roboto.loadFromFile("fonts/Roboto.ttf");
@@ -166,8 +164,8 @@ void Game::initWindow()
 Game::Game()
 {
 	this->initVar();
-	//this->initTexture();
-	//this->initSprite();
+	this->initTexture();
+	this->initSprite();
 	this->initFont();
 	this->initText();
 	this->initShapes();
@@ -186,14 +184,14 @@ const bool Game::isRunning() const
 }
 
 //Functions
-/*
+
 void Game::updateMousePosition() 
 {
 	//update the mouse position relative to window
 	this->mousePos = sf::Mouse::getPosition(*this->window);
 	this->mousePosView = this->window->mapPixelToCoords(this->mousePos);
 }
-*/
+
 
 void Game::pollEvents()
 {
@@ -207,7 +205,7 @@ void Game::pollEvents()
 			case sf::Event::KeyPressed:
 
 				//temporary keyboard inputs for window changing and panel selection
-				if (this->current_state == 2 && isGameOver == 0 && isClearLevel == 0 && select_Quit == 0)
+				if (this->current_state == 2 && !isGameOver && !isClearLevel && !select_Quit)
 				{
 					if (this->ev.key.code == sf::Keyboard::Tab) //pressing Tab will return to the title screen
 					{
