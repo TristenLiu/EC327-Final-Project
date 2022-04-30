@@ -39,8 +39,8 @@ private:
 
 	sf::Font Roboto, Candaraz;
 
-	sf::Texture easyTexture, mediumTexture, hardTexture, marathonTexture, quitTexture, memoTexture, yesTexture, noTexture;
-	sf::Sprite easySprite, mediumSprite, hardSprite, marathonSprite, quitSprite, memoSprite, yesSprite, noSprite;
+	sf::Texture easyTexture, mediumTexture, hardTexture, marathonTexture, quitSTexture, quitLTexture, quitCTexture, memoTexture, yesTexture, noTexture, instTexture, lossTexture, winTexture;
+	sf::Sprite easySprite, mediumSprite, hardSprite, marathonSprite, quitSSprite, quitLSprite, quitCSprite, memoSprite, yesSprite, noSprite, instSprite, lossSprite, winSprite;
 	sf::Texture bomb_texture;
 	sf::Sprite bomb_sprite;
 
@@ -102,7 +102,7 @@ public:
 
 	void update();
 
-	//void renderButtons();
+	void renderButtons();
 	void renderText();
 	//void renderGrid(); removed background and grid
 	void render_flipped_panel();
