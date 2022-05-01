@@ -106,7 +106,6 @@ public:
 
 	void renderButtons();
 	void renderText();
-	//void renderGrid(); removed background and grid
 	void render_flipped_panel();
 
 	void render();

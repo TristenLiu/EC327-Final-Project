@@ -111,7 +111,7 @@ void Game::initText()
 	this->panel_explain.setFont(Roboto);
 	this->panel_explain.setCharacterSize(24);
 	this->panel_explain.setFillColor(sf::Color::White);
-	this->panel_explain.setString("<- sum of the 1x/2x/3x cards\nin row/column\n<- number of 0's in row/column");
+	this->panel_explain.setString("<- sum of the 1x/2x/3x cards\nin row/column\n<- number of bombs in row/column");
 
 	this->bombs_r1.setFont(Roboto);
 	this->bombs_r1.setCharacterSize(36);
