@@ -765,8 +765,8 @@ void Game::createGrid()
 		{
 			do
 			{
-				a = rand() % 4; 
-				b = rand() % 4; 
+				a = rand() % 5; 
+				b = rand() % 5; 
 			} while (lv_grid[a][b] == 0); //randomly choose a location for each bomb; while loop to check that the panel isn't already taken
 
 			lv_grid[a][b] = 0; //set the panel equal to bomb (0)
@@ -776,8 +776,8 @@ void Game::createGrid()
 		{
 			do
 			{
-				a = rand() % 4;
-				b = rand() % 4;
+				a = rand() % 5;
+				b = rand() % 5;
 			} while (lv_grid[a][b] == 0 || lv_grid[a][b] == 2);
 
 			lv_grid[a][b] = 2;
@@ -787,8 +787,8 @@ void Game::createGrid()
 		{
 			do
 			{
-				a = rand() % 4;
-				b = rand() % 4;
+				a = rand() % 5;
+				b = rand() % 5;
 			} while (lv_grid[a][b] == 0 || lv_grid[a][b] == 2 || lv_grid[a][b] == 3);
 
 			lv_grid[a][b] = 3;
