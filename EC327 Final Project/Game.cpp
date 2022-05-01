@@ -44,7 +44,8 @@ void Game::initTexture()
 	this->yesTexture.loadFromFile("images/YES.png");
 	this->noTexture.loadFromFile("images/NO.png");
 	this->instTexture.loadFromFile("images/INSTRUCTIONS.png");
-	this->bomb_texture.loadFromFile("images/bomb_small.png");
+	this->bombSTexture.loadFromFile("images/bomb_small.png");
+	this->bombLTexture.loadFromFile("images/bombTile.png");
 	this->lossTexture.loadFromFile("images/gameOver.png");
 	this->winTexture.loadFromFile("images/gameWin.png");
 	this->contTexture.loadFromFile("images/continue.png");
@@ -71,7 +72,8 @@ void Game::initSprite()
 	this->yesSprite.setTexture(yesTexture);				this->yesSprite.setScale(.50f, .50f);			
 	this->noSprite.setTexture(noTexture);				this->noSprite.setScale(.50f, .50f);
 	this->instSprite.setTexture(instTexture);			this->instSprite.setScale(.50f, .50f);
-	this->bomb_sprite.setTexture(bomb_texture);
+	this->bombSSprite.setTexture(bombSTexture);
+	this->bombLSprite.setTexture(bombLTexture);
 	this->lossSprite.setTexture(lossTexture);			this->lossSprite.setScale(1.5f, 1.5f);
 	this->winSprite.setTexture(winTexture);				this->winSprite.setScale(1.5f, 1.5f);
 	this->contSprite.setTexture(contTexture);			this->contSprite.setScale(1.5f, 1.5f);
@@ -99,12 +101,12 @@ void Game::initText()
 	this->instructions.setFont(Roboto);
 	this->instructions.setCharacterSize(24);
 	this->instructions.setFillColor(sf::Color::White);
-	this->instructions.setString("You are given a 5x5 grid of panels. Click on a panel to flip it. Each panel holds either a 0, 1, 2 or 3.\nWhen you flip a panel, your current level score is mulitplied by the number you flipped.\nIf you flip a 0, it's game over. The goal of the game is to find all of the 2x and 3x panels.\n\nThe game features 8 individual levels (1 being the easiest and 8 being the hardest) and a marathon mode.\nHarder levels have more multiplier cards but also more 0's. \nIn marathon mode, you will play through each level successively until you lose a level.\nWhen you win a level in marathon mode, your total score in the level is added to the marathon score.");
+	this->instructions.setString("You are given a 5x5 grid of panels. Click on a panel to flip it. Each panel holds either a bomb, 1, 2 or 3.\n When you flip a panel, your current level score is mulitplied by the number you flipped.\nIf you flip a bomb, it's game over. The goal of the game is to find all of the 2x and 3x panels.\n\nThe game features 8 individual levels (1 being the easiest and 8 being the hardest) and a marathon mode.\nHarder levels have more multiplier cards but also more bombs. \nIn marathon mode, each level will get progressively more difficult until you lose a level.\nWhen you win a level in marathon mode, your total score in the level is added to the marathon score.");
 
 	this->instructions_in_game.setFont(Roboto);
 	this->instructions_in_game.setCharacterSize(24);
 	this->instructions_in_game.setFillColor(sf::Color::White);
-	this->instructions_in_game.setString("Click on a panel to flip it!\nIf you flip a '0', it's game over!\nFind all the 2x and 3x cards to win!");
+	this->instructions_in_game.setString("Click on a panel to flip it!\nIf you flip a bomb, it's game over!\nFind all the 2x and 3x cards to win!");
 
 	this->panel_explain.setFont(Roboto);
 	this->panel_explain.setCharacterSize(24);
@@ -136,11 +138,6 @@ void Game::initText()
 	this->number_1.setCharacterSize(45);
 	this->number_1.setFillColor(sf::Color::White);
 	this->number_1.setString("1");
-
-	this->number_bomb.setFont(Roboto);
-	this->number_bomb.setCharacterSize(45);
-	this->number_bomb.setFillColor(sf::Color::White);
-	this->number_bomb.setString("O");
 }
 
 void Game::initShapes()
@@ -471,8 +468,8 @@ void Game::updateText()
 			bombs_r1.setPosition(650, 150 + 100 * i);
 			this->window->draw(this->bombs_r1);
 
-			bomb_sprite.setPosition(600, 150 + 100 * i);
-			this->window->draw(this->bomb_sprite);
+			bombSSprite.setPosition(600, 150 + 100 * i);
+			this->window->draw(this->bombSSprite);
 
 			//set column totals into text object
 			this->bombs_c1.setString(std::to_string(num_bombs_col));
@@ -485,8 +482,8 @@ void Game::updateText()
 			bombs_c1.setPosition(150 + 100 * i, 650);
 			this->window->draw(this->bombs_c1);
 
-			bomb_sprite.setPosition(100 + 100 * i, 650);
-			this->window->draw(this->bomb_sprite);
+			bombSSprite.setPosition(100 + 100 * i, 650);
+			this->window->draw(this->bombSSprite);
 
 			//reset counts for next row/column
 			num_bombs_row = 0;
@@ -947,9 +944,8 @@ void Game::render_flipped_panel()
 					{
 						panel_bomb.setPosition(100 + (99 * j), 100 + (99 * i));
 						this->window->draw(panel_bomb);
-
-						number_bomb.setPosition(135 + (99 * j), 115 + (99 * i));
-						this->window->draw(number_bomb);
+						bombLSprite.setPosition(100 + (99 * j), 100 + (99 * i));
+						this->window->draw(bombLSprite);
 					}
 
 					else if (lv_grid[i][j] == 1 || lv_grid[i][j] == 2 || lv_grid[i][j] == 3)
