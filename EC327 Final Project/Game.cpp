@@ -491,7 +491,7 @@ void Game::createGrid()
 		}
 
 		int a, b; //indices to reference elements in grid matrix
-		int combo_choice = rand() % 4; //rand() % 4
+		int combo_choice = rand() % 5;
 
 		//choose an allocation of bombs and multiplier cards for the level
 		
@@ -499,31 +499,26 @@ void Game::createGrid()
 		{
 		case 1: //if in level 1
 		{
-			int combo_choice = rand() % 4; //rand() % 4
+			this->current_num_bombs = 6;
 			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
 			{
 			case 0:
-				this->current_num_bombs = 6;
 				this->current_num_2x = 3;
 				this->current_num_3x = 1;
 				break;
 			case 1:
-				this->current_num_bombs = 6;
 				this->current_num_2x = 0;
 				this->current_num_3x = 3;
 				break;
 			case 2:
-				this->current_num_bombs = 6;
 				this->current_num_2x = 5;
 				this->current_num_3x = 0;
 				break;
 			case 3:
-				this->current_num_bombs = 6;
 				this->current_num_2x = 2;
 				this->current_num_3x = 2;
 				break;
 			case 4:
-				this->current_num_bombs = 6;
 				this->current_num_2x = 4;
 				this->current_num_3x = 1;
 				break;
@@ -532,31 +527,26 @@ void Game::createGrid()
 		}
 		case 2: //level 2
 		{
-			int combo_choice = 4;
+			this->current_num_bombs = 7;
 			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
 			{
 			case 0:
-				this->current_num_bombs = 7;
 				this->current_num_2x = 1;
 				this->current_num_3x = 3;
 				break;
 			case 1:
-				this->current_num_bombs = 7;
 				this->current_num_2x = 6;
 				this->current_num_3x = 0;
 				break;
 			case 2:
-				this->current_num_bombs = 7;
 				this->current_num_2x = 3;
 				this->current_num_3x = 2;
 				break;
 			case 3:
-				this->current_num_bombs = 7;
 				this->current_num_2x = 0;
 				this->current_num_3x = 4;
 				break;
 			case 4:
-				this->current_num_bombs = 7;
 				this->current_num_2x = 5;
 				this->current_num_3x = 1;
 				break;
@@ -565,38 +555,32 @@ void Game::createGrid()
 		}
 		case 3: //level 3
 		{
-			int combo_choice = 3;
+			this->current_num_bombs = 8;
 			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
 			{
 			case 0:
-				this->current_num_bombs = 8;
 				this->current_num_2x = 2;
 				this->current_num_3x = 3;
 				break;
 			case 1:
-				this->current_num_bombs = 8;
 				this->current_num_2x = 7;
 				this->current_num_3x = 0;
 				break;
 			case 2:
-				this->current_num_bombs = 8;
 				this->current_num_2x = 4;
 				this->current_num_3x = 2;
 				break;
 			case 3:
-				this->current_num_bombs = 8;
 				this->current_num_2x = 1;
 				this->current_num_3x = 4;
 				break;
 			case 4:
-				this->current_num_bombs = 8;
 				this->current_num_2x = 6;
 				this->current_num_3x = 1;
 				break;
 			}
 			break;
 		}
-		//want to remove these remaining cases, but program freezes when I remove them
 		case 4: //level 4
 		{
 			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
