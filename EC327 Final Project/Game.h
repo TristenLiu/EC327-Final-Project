@@ -4,7 +4,7 @@
 #include <sstream>
 #include <ctime>
 #include <cstdlib>
-	
+
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -43,10 +43,8 @@ private:
 
 	sf::Texture lvl1Texture, lvl2Texture, lvl3Texture, lvl4Texture, lvl5Texture, lvl6Texture, lvl7Texture, lvl8Texture;
 	sf::Sprite lvl1Sprite, lvl2Sprite, lvl3Sprite, lvl4Sprite, lvl5Sprite, lvl6Sprite, lvl7Sprite, lvl8Sprite;
-	sf::Texture marathonTexture, quitSTexture, quitLTexture, quitCTexture, memoTexture, yesTexture, noTexture, instTexture, lossTexture, winTexture, contTexture;
-	sf::Sprite marathonSprite, quitSSprite, quitLSprite, quitCSprite, memoSprite, yesSprite, noSprite, instSprite, lossSprite, winSprite, contSprite;
-	sf::Texture bomb_texture;
-	sf::Sprite bomb_sprite;
+	sf::Texture marathonTexture, quitSTexture, quitLTexture, quitCTexture, memoTexture, yesTexture, noTexture, instTexture, lossTexture, winTexture, contTexture, bombSTexture, bombLTexture;
+	sf::Sprite marathonSprite, quitSSprite, quitLSprite, quitCSprite, memoSprite, yesSprite, noSprite, instSprite, lossSprite, winSprite, contSprite, bombSSprite, bombLSprite;
 
 	//Shapes (for panels)
 	sf::RectangleShape panel_facedown, panel_number, panel_bomb, panel_totals;
@@ -108,7 +106,6 @@ public:
 
 	void renderButtons();
 	void renderText();
-	//void renderGrid(); removed background and grid
 	void render_flipped_panel();
 
 	void render();
