@@ -318,6 +318,8 @@ void Game::pollEvents()
 								if (lv_or_marathon == 1)
 								{
 									current_lv = 0;
+									current_marathon_total = 0;
+
 								}
 								this->startLevel = 1;
 								this->isGameOver = false;
@@ -354,35 +356,19 @@ void Game::pollEvents()
 void Game::updateText()
 {
 	//creating and updating text for current score and level during game
-	
-	//Creating string to display Easy/Medium/Hard depending on current_lv
-	std::string lv_mode;
-	if (current_lv == 1)
-	{
-		lv_mode = "Easy";
-	}
-	else if (current_lv == 2)
-	{
-		lv_mode = "Medium";
-	}
-
-	else if (current_lv == 3)
-	{
-		lv_mode = "Hard";
-	}
 
 	//if in individual level mode, only display current level and level score
 	if (current_state == 2 && lv_or_marathon == 0)
 	{
 		std::stringstream ss;
-		ss << "Current Level: " << lv_mode << "\n" << "Current Level Points: " << this->current_lv_points;
+		ss << "Current Level: " << current_lv << "\n" << "Current Level Points: " << this->current_lv_points;
 		this->text_current_lv_score.setString(ss.str());
 	}
-
+	//if in marathon mode, display marathon mode and current marathon total
 	else if (current_state == 2 && lv_or_marathon == 1)
 	{
 		std::stringstream ss;
-		ss << "Marathon Mode" << "\n" << "Current Level : " << lv_mode << "\n" << "Current Level Points : " << this->current_lv_points << "\n" << "Total Marathon Points : " << this->current_marathon_total;
+		ss << "Marathon Mode" << "\n" << "Current Level : " << current_lv << "\n" << "Current Level Points : " << this->current_lv_points << "\n" << "Total Marathon Points : " << this->current_marathon_total;
 		this->text_current_lv_score.setString(ss.str());
 	}
 
@@ -511,100 +497,101 @@ void Game::createGrid()
 		
 		switch (current_lv) //check current level
 		{
-		case 1: //easy (levels 2-3 from original)
+		case 1: //if in level 1
 		{
+			int combo_choice = rand() % 4; //rand() % 4
+			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
+			{
+			case 0:
+				this->current_num_bombs = 6;
+				this->current_num_2x = 3;
+				this->current_num_3x = 1;
+				break;
+			case 1:
+				this->current_num_bombs = 6;
+				this->current_num_2x = 0;
+				this->current_num_3x = 3;
+				break;
+			case 2:
+				this->current_num_bombs = 6;
+				this->current_num_2x = 5;
+				this->current_num_3x = 0;
+				break;
+			case 3:
+				this->current_num_bombs = 6;
+				this->current_num_2x = 2;
+				this->current_num_3x = 2;
+				break;
+			case 4:
+				this->current_num_bombs = 6;
+				this->current_num_2x = 4;
+				this->current_num_3x = 1;
+				break;
+			}
+			break;
+		}
+		case 2: //level 2
+		{
+			int combo_choice = 4;
 			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
 			{
 			case 0:
 				this->current_num_bombs = 7;
-				this->current_num_2x = 5;
-				this->current_num_3x = 1;
+				this->current_num_2x = 1;
+				this->current_num_3x = 3;
 				break;
 			case 1:
+				this->current_num_bombs = 7;
+				this->current_num_2x = 6;
+				this->current_num_3x = 0;
+				break;
+			case 2:
 				this->current_num_bombs = 7;
 				this->current_num_2x = 3;
 				this->current_num_3x = 2;
 				break;
+			case 3:
+				this->current_num_bombs = 7;
+				this->current_num_2x = 0;
+				this->current_num_3x = 4;
+				break;
+			case 4:
+				this->current_num_bombs = 7;
+				this->current_num_2x = 5;
+				this->current_num_3x = 1;
+				break;
+			}
+			break;
+		}
+		case 3: //level 3
+		{
+			int combo_choice = 3;
+			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
+			{
+			case 0:
+				this->current_num_bombs = 8;
+				this->current_num_2x = 2;
+				this->current_num_3x = 3;
+				break;
+			case 1:
+				this->current_num_bombs = 8;
+				this->current_num_2x = 7;
+				this->current_num_3x = 0;
+				break;
 			case 2:
+				this->current_num_bombs = 8;
+				this->current_num_2x = 4;
+				this->current_num_3x = 2;
+				break;
+			case 3:
 				this->current_num_bombs = 8;
 				this->current_num_2x = 1;
 				this->current_num_3x = 4;
 				break;
-			case 3:
-				this->current_num_bombs = 8;
-				this->current_num_2x = 4;
-				this->current_num_3x = 2;
-				break;
 			case 4:
 				this->current_num_bombs = 8;
 				this->current_num_2x = 6;
 				this->current_num_3x = 1;
-				break;
-			}
-			break;
-		}
-		case 2: //medium mode (levels 4-6 from original)
-		{
-
-			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
-			{
-			case 0:
-				this->current_num_bombs = 8;
-				this->current_num_2x = 3;
-				this->current_num_3x = 3;
-				break;
-			case 1:
-				this->current_num_bombs = 10;
-				this->current_num_2x = 4;
-				this->current_num_3x = 3;
-				break;
-			case 2:
-				this->current_num_bombs = 10;
-				this->current_num_2x = 5;
-				this->current_num_3x = 2;
-				break;
-			case 3:
-				this->current_num_bombs = 10;
-				this->current_num_2x = 9;
-				this->current_num_3x = 0;
-				break;
-			case 4:
-				this->current_num_bombs = 10;
-				this->current_num_2x = 8;
-				this->current_num_3x = 1;
-				break;
-			}
-			break;
-		}
-		case 3: //hard (levels 7-8 from original)
-		{
-
-			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
-			{
-			case 0:
-				this->current_num_bombs = 10;
-				this->current_num_2x = 6;
-				this->current_num_3x = 3;
-				break;
-			case 1:
-				this->current_num_bombs = 10;
-				this->current_num_2x = 7;
-				this->current_num_3x = 2;
-				break;
-			case 2:
-				this->current_num_bombs = 13;
-				this->current_num_2x = 5;
-				this->current_num_3x = 4;
-				break;
-			case 3:
-				this->current_num_bombs = 13;
-				this->current_num_2x = 2;
-				this->current_num_3x = 6;
-				break;
-			case 4:
-				this->current_num_bombs = 13;
-				this->current_num_2x = 7;
-				this->current_num_3x = 3;
 				break;
 			}
 			break;
@@ -1062,8 +1049,6 @@ void Game::render()
 
 /*
 Notes:
-- I'm getting freezes again and can only access easy mode, but the program should be able to run. Let me know if you're getting the freezes as well
-- We should remove cases 4-8, but the program freezes when I try to remove them
 - We need to add another box for asking the player if they want to continue playing after they've cleared a level in marathon mode (lines 327-341)
 - Marathon mode should run correctly after this option is added
 - The game over and game win boxes are obscuring the board, is there a way to make them transparent? Even though the game is over/won, it
