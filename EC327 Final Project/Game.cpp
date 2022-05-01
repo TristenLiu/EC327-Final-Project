@@ -99,7 +99,7 @@ void Game::initText()
 	this->instructions.setFont(Roboto);
 	this->instructions.setCharacterSize(24);
 	this->instructions.setFillColor(sf::Color::White);
-	this->instructions.setString("WRITE INSTRUCTIONS HERE");
+	this->instructions.setString("You are given a 5x5 grid of panels. Click on a panel to flip it. Each panel holds either a 0, 1, 2 or 3.\nWhen you flip a panel, your current level score is mulitplied by the number you flipped.\nIf you flip a 0, it's game over. The goal of the game is to find all of the 2x and 3x panels.\n\nThe game features 8 individual levels (1 being the easiest and 8 being the hardest) and a marathon mode.\nHarder levels have more multiplier cards but also more 0's. \nIn marathon mode, you will play through each level successively until you lose a level.\nWhen you win a level in marathon mode, your total score in the level is added to the marathon score.");
 
 	this->instructions_in_game.setFont(Roboto);
 	this->instructions_in_game.setCharacterSize(24);
@@ -287,6 +287,7 @@ void Game::pollEvents()
 							else if (this->marathonSprite.getGlobalBounds().contains(this->mousePosView))
 							{
 								this->current_lv = 0;
+								this->current_marathon_total = 0; //starting a new marathon run from menu resets score
 								this->lv_or_marathon = 1;
 								this->current_state = 2;
 								this->startLevel = 1;
@@ -361,14 +362,16 @@ void Game::pollEvents()
 						}
 						else if (this->isGameOver)
 						{
-							//game over and game clear and marathon game over use same menu
-
 							if (this->yesSprite.getGlobalBounds().contains(this->mousePosView))
 							{
 								if (lv_or_marathon == 1)
 								{
-									current_lv = 0;
-									current_marathon_total = 0;
+									//if you click on continue in marathon mode after a marathon game over, reset score and marathon total and start next level
+									if (isClearLevel == 0 && isGameOver == 1)
+									{
+										current_lv = 0;
+										current_marathon_total = 0;
+									}
 								}
 								this->startLevel = 1;
 								this->isGameOver = false;
@@ -379,16 +382,19 @@ void Game::pollEvents()
 								this->isGameOver = false;
 							}
 						}
-						else if (this->isClearLevel) 
-							
+						else if (this->isClearLevel)
+						{
 							if (this->yesSprite.getGlobalBounds().contains(this->mousePosView))
 							{
+								//if you click on continue in marathon mode after you clear a level, start next level like usual, createGrid function handles the rest
 								this->startLevel = 1;
 							}
 							else if (this->noSprite.getGlobalBounds().contains(this->mousePosView))
 							{
 								this->current_state = 1;
 							}
+						}
+	
 					}
 				}
 				break;
@@ -1092,76 +1098,3 @@ void Game::render()
 
 	this->window->display();
 }
-
-/*
-Notes:
-- We need to add another box for asking the player if they want to continue playing after they've cleared a level in marathon mode (lines 327-341)
-- Marathon mode should run correctly after this option is added
-- The game over and game win boxes are obscuring the board, is there a way to make them transparent? Even though the game is over/won, it
-would be nice for the player to be able to see the final layout of the board
-- Pujan said we should add instructions on the game page itself, so I've added some mini instructions 
-- Do you still want to make finding 1's mandatory?
-- Still need to put instructions in the main instructions page
-
-- The leftmost column and bottom row of the grid never have bombs or 2's or 3's - are you also getting this problem? I was reading online about
-the rand method being biased toward the lower end of the range, but I don't know any other method to generate randon numbers...
-
-- I've tried the level generator below (the bomb/1x/2x/3x quantites are all randomly generated), but the results feel really even
-Do you  want to use this method or shoudl we just go back to using the set allocations?
-
-Draft for alternate level generator:
-
-switch (current_lv) //check current level
-		{
-			case 1: //easy mode
-			{
-				this->current_num_bombs = (rand() % 3) + 6; //6-8
-				this->current_num_2x = rand() % 8; //0-7
-
-				//need to balance the number of 2x and 3x cards
-				if (current_num_2x > 4)
-				{
-					this->current_num_3x = rand() % 3; //0-2
-				}
-				else
-				{
-					this->current_num_3x = (rand() % 2) + 3; //3-4
-				}
-				break;
-			}
-			case 2: //medium mode
-			{
-				this->current_num_bombs = (rand() % 3) + 8; //8-10
-				this->current_num_2x = (rand() % 8) + 1; //1-8
-
-				//need to balance the number of 2x and 3x cards
-				if (current_num_2x > 4)
-				{
-					this->current_num_3x = (rand() % 4) + 1; //1-4
-				}
-				else
-				{
-					this->current_num_3x = (rand() % 3) + 4; //4-6
-				}
-				break;
-			}
-			case 3: //hard mode
-			{
-				this->current_num_bombs = (rand() % 3) + 10; //10-13
-				this->current_num_2x = (rand() % 8) + 1; //1-9
-
-				//need to balance the number of 2x and 3x cards
-				if (current_num_2x > 4)
-				{
-					this->current_num_3x = (rand() % 2) + 1; //1-2
-				}
-				else
-				{
-					this->current_num_3x = (rand() % 3) + 4; //4-6
-				}
-				break;
-			}
-
-		}
-
-*/
