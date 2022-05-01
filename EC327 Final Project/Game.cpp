@@ -8,7 +8,6 @@ void Game::initVar()
 	this->current_state = 1; //1 = main menu, 2 = game board
 	this->select_instructions = 0;
 	this->select_Quit = false;
-	this->select_marathon_continue = false;
 	this->lv_or_marathon = 0; //0 = individual level mode, 1 = marathon mode
 	this->current_lv = 0;
 	this->current_lv_points = 1;
@@ -27,13 +26,17 @@ void Game::initVar()
 
 }
 
-
 void Game::initTexture()
 {
 	//Load Textures from image folder
-	this->easyTexture.loadFromFile("images/EASY.png");
-	this->mediumTexture.loadFromFile("images/MEDIUM.png");
-	this->hardTexture.loadFromFile("images/HARD.png");
+	this->lvl1Texture.loadFromFile("images/level1.png");
+	this->lvl2Texture.loadFromFile("images/level2.png");
+	this->lvl3Texture.loadFromFile("images/level3.png");
+	this->lvl4Texture.loadFromFile("images/level4.png");
+	this->lvl5Texture.loadFromFile("images/level5.png");
+	this->lvl6Texture.loadFromFile("images/level6.png");
+	this->lvl7Texture.loadFromFile("images/level7.png");
+	this->lvl8Texture.loadFromFile("images/level8.png");
 	this->marathonTexture.loadFromFile("images/Marathon.png");
 	this->quitSTexture.loadFromFile("images/QUITSMALL.png");
 	this->quitLTexture.loadFromFile("images/QUITLARGE.png");
@@ -44,6 +47,7 @@ void Game::initTexture()
 	this->bomb_texture.loadFromFile("images/bomb_small.png");
 	this->lossTexture.loadFromFile("images/gameOver.png");
 	this->winTexture.loadFromFile("images/gameWin.png");
+	this->contTexture.loadFromFile("images/continue.png");
 }
 
 void Game::initSprite()
@@ -52,19 +56,25 @@ void Game::initSprite()
 	//Each checkerboard square is 150px
 
 	//button sprites are 256x128 px
-	this->easySprite.setTexture(easyTexture);			this->easySprite.setScale(.50f, .50f);			
-	this->mediumSprite.setTexture(mediumTexture);		this->mediumSprite.setScale(.50f, .50f);		
-	this->hardSprite.setTexture(hardTexture);			this->hardSprite.setScale(.50f, .50f);			
+	this->lvl1Sprite.setTexture(lvl1Texture);			this->lvl1Sprite.setScale(.50f, .50f);
+	this->lvl2Sprite.setTexture(lvl2Texture);			this->lvl2Sprite.setScale(.50f, .50f);
+	this->lvl3Sprite.setTexture(lvl3Texture);			this->lvl3Sprite.setScale(.50f, .50f);
+	this->lvl4Sprite.setTexture(lvl4Texture);			this->lvl4Sprite.setScale(.50f, .50f);
+	this->lvl5Sprite.setTexture(lvl5Texture);			this->lvl5Sprite.setScale(.50f, .50f);
+	this->lvl6Sprite.setTexture(lvl6Texture);			this->lvl6Sprite.setScale(.50f, .50f);
+	this->lvl7Sprite.setTexture(lvl7Texture);			this->lvl7Sprite.setScale(.50f, .50f);
+	this->lvl8Sprite.setTexture(lvl8Texture);			this->lvl8Sprite.setScale(.50f, .50f);
 	this->marathonSprite.setTexture(marathonTexture);	this->marathonSprite.setScale(0.50f, 0.50f);	
 	this->quitSSprite.setTexture(quitSTexture);			this->quitSSprite.setScale(.75f, .75f);
 	this->quitLSprite.setTexture(quitLTexture);			this->quitLSprite.setScale(.50f, .50f);
-	this->quitCSprite.setTexture(quitCTexture);			this->quitCSprite.setScale(2.f, 2.f);	
+	this->quitCSprite.setTexture(quitCTexture);	
 	this->yesSprite.setTexture(yesTexture);				this->yesSprite.setScale(.50f, .50f);			
 	this->noSprite.setTexture(noTexture);				this->noSprite.setScale(.50f, .50f);
 	this->instSprite.setTexture(instTexture);			this->instSprite.setScale(.50f, .50f);
 	this->bomb_sprite.setTexture(bomb_texture);
-	this->lossSprite.setTexture(lossTexture);			this->lossSprite.setScale(2.f, 2.f);
-	this->winSprite.setTexture(winTexture);				this->winSprite.setScale(2.f, 2.f);
+	this->lossSprite.setTexture(lossTexture);			this->lossSprite.setScale(1.5f, 1.5f);
+	this->winSprite.setTexture(winTexture);				this->winSprite.setScale(1.5f, 1.5f);
+	this->contSprite.setTexture(contTexture);			this->contSprite.setScale(1.5f, 1.5f);
 }
 
 void Game::initFont()
@@ -210,7 +220,7 @@ void Game::pollEvents()
 						if (!this->select_instructions && !this->select_Quit)
 						{
 							//Check which button the mouse is over if the mouse is left-clicked
-							if (this->easySprite.getGlobalBounds().contains(this->mousePosView))
+							if (this->lvl1Sprite.getGlobalBounds().contains(this->mousePosView))
 							{
 								this->current_lv = 1;
 								this->lv_or_marathon = 0;
@@ -218,7 +228,7 @@ void Game::pollEvents()
 								this->startLevel = 1;
 								this->select_Quit = false;
 							}
-							else if (this->mediumSprite.getGlobalBounds().contains(this->mousePosView))
+							else if (this->lvl2Sprite.getGlobalBounds().contains(this->mousePosView))
 							{
 								this->current_lv = 2;
 								this->lv_or_marathon = 0;
@@ -226,9 +236,49 @@ void Game::pollEvents()
 								this->startLevel = 1;
 								this->select_Quit = false;
 							}
-							else if (this->hardSprite.getGlobalBounds().contains(this->mousePosView))
+							else if (this->lvl3Sprite.getGlobalBounds().contains(this->mousePosView))
 							{
 								this->current_lv = 3;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->lvl4Sprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 4;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->lvl5Sprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 5;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->lvl6Sprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 6;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->lvl7Sprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 7;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->lvl8Sprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 8;
 								this->lv_or_marathon = 0;
 								this->current_state = 2;
 								this->startLevel = 1;
@@ -309,7 +359,7 @@ void Game::pollEvents()
 								this->select_Quit = false;
 							}
 						}
-						else if (this->isGameOver || this->isClearLevel)
+						else if (this->isGameOver)
 						{
 							//game over and game clear and marathon game over use same menu
 
@@ -319,7 +369,6 @@ void Game::pollEvents()
 								{
 									current_lv = 0;
 									current_marathon_total = 0;
-
 								}
 								this->startLevel = 1;
 								this->isGameOver = false;
@@ -330,20 +379,16 @@ void Game::pollEvents()
 								this->isGameOver = false;
 							}
 						}
-						/*
-						else if (select_marathon_continue == 1) when player wins a marathon level, need to give them option to select whether to continue or quit
+						else if (this->isClearLevel) 
 							
-							if(player chooses to contunie)
+							if (this->yesSprite.getGlobalBounds().contains(this->mousePosView))
 							{
 								this->startLevel = 1;
-								select_marathon_continue = 0;
 							}
-							else(player chooses to quit)
+							else if (this->noSprite.getGlobalBounds().contains(this->mousePosView))
 							{
 								this->current_state = 1;
-								select_marathon_continue = 0;
 							}
-						*/
 					}
 				}
 				break;
@@ -465,7 +510,7 @@ void Game::createGrid()
 
 		if (lv_or_marathon == 1)
 		{
-			if (current_lv != 3)
+			if (current_lv != 8)
 			{
 				current_lv++;
 			}
@@ -933,19 +978,30 @@ void Game::renderButtons()
 
 	if (this->current_state == 1)
 	{
+		this->quitCSprite.setScale(2.f, 2.f);
 		if (!this->select_instructions && !this->select_Quit)
 		{
-			this->easySprite.setPosition(colWidth * 1, rowHeight * 3);
-			this->window->draw(easySprite);
-			this->mediumSprite.setPosition(colWidth * 1, rowHeight * 5);
-			this->window->draw(mediumSprite);
-			this->hardSprite.setPosition(colWidth * 1, rowHeight * 7);
-			this->window->draw(hardSprite);
-			this->marathonSprite.setPosition(colWidth * 1, rowHeight * 9);
+			this->lvl1Sprite.setPosition(colWidth * 1, rowHeight * 3.5);
+			this->window->draw(lvl1Sprite);
+			this->lvl2Sprite.setPosition(colWidth * 3, rowHeight * 3.5);
+			this->window->draw(lvl2Sprite);
+			this->lvl3Sprite.setPosition(colWidth * 1, rowHeight * 5.5);
+			this->window->draw(lvl3Sprite);
+			this->lvl4Sprite.setPosition(colWidth * 3, rowHeight * 5.5);
+			this->window->draw(lvl4Sprite);
+			this->lvl5Sprite.setPosition(colWidth * 1, rowHeight * 7.5);
+			this->window->draw(lvl5Sprite);
+			this->lvl6Sprite.setPosition(colWidth * 3, rowHeight * 7.5);
+			this->window->draw(lvl6Sprite);
+			this->lvl7Sprite.setPosition(colWidth * 1, rowHeight * 9.5);
+			this->window->draw(lvl7Sprite);
+			this->lvl8Sprite.setPosition(colWidth * 3, rowHeight * 9.5);
+			this->window->draw(lvl8Sprite);
+			this->marathonSprite.setPosition(colWidth * 5, rowHeight * 6.5);
 			this->window->draw(marathonSprite);
-			this->instSprite.setPosition(colWidth * 4, rowHeight * 4);
+			this->instSprite.setPosition(colWidth * 5, rowHeight * 3.5);
 			this->window->draw(instSprite);
-			this->quitLSprite.setPosition(colWidth * 4, rowHeight * 8);
+			this->quitLSprite.setPosition(colWidth * 5, rowHeight * 9.5);
 			this->window->draw(quitLSprite);
 		}
 		else if (this->select_instructions)
@@ -968,6 +1024,7 @@ void Game::renderButtons()
 	}
 	else if (this->current_state == 2)
 	{
+		this->quitCSprite.setScale(1.5f, 1.5f);
 		if (!select_Quit && !this->isGameOver && !this->isClearLevel)
 		{
 			this->quitSSprite.setPosition(colWidth * 5.5, rowHeight * 11);
@@ -976,33 +1033,38 @@ void Game::renderButtons()
 		else if (this->select_Quit == 1)
 		{
 			//Display confirm quit message
-
-			this->quitCSprite.setPosition(this->window->getSize().x / 2 - this->quitCSprite.getLocalBounds().width, 
-										  this->window->getSize().y / 2 - this->quitCSprite.getLocalBounds().height);
+			this->quitCSprite.setPosition(colWidth*4.5, rowHeight*6.5);
 			this->window->draw(quitCSprite);
-			this->yesSprite.setPosition(this->window->getSize().x / 2 - 192, this->window->getSize().y / 2 + 25);
+			this->yesSprite.setPosition(colWidth * 4.5 + 32, rowHeight * 6.5 + 104);
 			this->window->draw(yesSprite);
-			this->noSprite.setPosition(this->window->getSize().x / 2 + 64, this->window->getSize().y / 2 + 25);
+			this->noSprite.setPosition(colWidth * 4.5 + 228, rowHeight * 6.5 + 104);
 			this->window->draw(noSprite);
 		}
 		else if (this->isGameOver) 
 		{
-			this->lossSprite.setPosition(this->window->getSize().x / 2 - this->lossSprite.getLocalBounds().width,
-										 this->window->getSize().y / 2 - this->lossSprite.getLocalBounds().height);
+			this->lossSprite.setPosition(colWidth * 4.5, rowHeight * 6.5);
 			this->window->draw(lossSprite);
-			this->yesSprite.setPosition(this->window->getSize().x / 2 - 192, this->window->getSize().y / 2 + 25);
+			this->yesSprite.setPosition(colWidth * 4.5 + 32, rowHeight * 6.5 + 104);
 			this->window->draw(yesSprite);
-			this->noSprite.setPosition(this->window->getSize().x / 2 + 64, this->window->getSize().y / 2 + 25);
+			this->noSprite.setPosition(colWidth * 4.5 + 228, rowHeight * 6.5 + 104);
 			this->window->draw(noSprite);
 		}
-		else if (this->isClearLevel)
+		else if (this->isClearLevel && !this->lv_or_marathon)
 		{
-			this->winSprite.setPosition(this->window->getSize().x / 2 - this->winSprite.getLocalBounds().width,
-										this->window->getSize().y / 2 - this->winSprite.getLocalBounds().height);
+			this->winSprite.setPosition(colWidth * 4.5, rowHeight * 6.5);
 			this->window->draw(winSprite);
-			this->yesSprite.setPosition(this->window->getSize().x / 2 - 192, this->window->getSize().y / 2 + 25);
+			this->yesSprite.setPosition(colWidth * 4.5 + 32, rowHeight * 6.5 + 104);
 			this->window->draw(yesSprite);
-			this->noSprite.setPosition(this->window->getSize().x / 2 + 64, this->window->getSize().y / 2 + 25);
+			this->noSprite.setPosition(colWidth * 4.5 + 228, rowHeight * 6.5 + 104);
+			this->window->draw(noSprite);
+		}
+		else if (this->isClearLevel && this->lv_or_marathon)
+		{
+			this->winSprite.setPosition(colWidth * 4.5, rowHeight * 6.5);
+			this->window->draw(winSprite);
+			this->yesSprite.setPosition(colWidth * 4.5 + 32, rowHeight * 6.5 + 104);
+			this->window->draw(yesSprite);
+			this->noSprite.setPosition(colWidth * 4.5 + 228, rowHeight * 6.5 + 104);
 			this->window->draw(noSprite);
 		}
 	}

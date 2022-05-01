@@ -41,8 +41,10 @@ private:
 
 	sf::Font Roboto, Candaraz;
 
-	sf::Texture easyTexture, mediumTexture, hardTexture, marathonTexture, quitSTexture, quitLTexture, quitCTexture, memoTexture, yesTexture, noTexture, instTexture, lossTexture, winTexture;
-	sf::Sprite easySprite, mediumSprite, hardSprite, marathonSprite, quitSSprite, quitLSprite, quitCSprite, memoSprite, yesSprite, noSprite, instSprite, lossSprite, winSprite;
+	sf::Texture lvl1Texture, lvl2Texture, lvl3Texture, lvl4Texture, lvl5Texture, lvl6Texture, lvl7Texture, lvl8Texture;
+	sf::Sprite lvl1Sprite, lvl2Sprite, lvl3Sprite, lvl4Sprite, lvl5Sprite, lvl6Sprite, lvl7Sprite, lvl8Sprite;
+	sf::Texture marathonTexture, quitSTexture, quitLTexture, quitCTexture, memoTexture, yesTexture, noTexture, instTexture, lossTexture, winTexture, contTexture;
+	sf::Sprite marathonSprite, quitSSprite, quitLSprite, quitCSprite, memoSprite, yesSprite, noSprite, instSprite, lossSprite, winSprite, contSprite;
 	sf::Texture bomb_texture;
 	sf::Sprite bomb_sprite;
 
@@ -64,7 +66,6 @@ private:
 	bool isGameOver; //1 if game over
 	bool isClearLevel; // 1 if level is cleared
 	bool startLevel; //flag to generate a new grid, this is so the grid doean't get re-initiated every frame
-	bool select_marathon_continue;
 
 	int lv_grid[5][5];
 	int is_flipped_grid[5][5]; // 0 = unflipped, used to keep track of flipped panels while in the middle of a game
