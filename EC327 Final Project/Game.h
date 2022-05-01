@@ -32,15 +32,19 @@ private:
 	sf::Text gameTitle, menuPrompt;
 	sf::Text text_current_lv_score;
 	sf::Text messages;
+	sf::Text instructions_in_game;
+	sf::Text panel_explain;
 	sf::Text instructions;
 	sf::Text quit_instructions;
 	sf::Text bombs_r1, card_total_r1, bombs_c1, card_total_c1;
-	sf::Text number_1, number_2, number_3, number_bomb, ques_mark;
+	sf::Text number_1, number_2, number_3, number_bomb;
 
 	sf::Font Roboto, Candaraz;
 
-	sf::Texture easyTexture, mediumTexture, hardTexture, marathonTexture, quitSTexture, quitLTexture, quitCTexture, memoTexture, yesTexture, noTexture, instTexture, lossTexture, winTexture;
-	sf::Sprite easySprite, mediumSprite, hardSprite, marathonSprite, quitSSprite, quitLSprite, quitCSprite, memoSprite, yesSprite, noSprite, instSprite, lossSprite, winSprite;
+	sf::Texture lvl1Texture, lvl2Texture, lvl3Texture, lvl4Texture, lvl5Texture, lvl6Texture, lvl7Texture, lvl8Texture;
+	sf::Sprite lvl1Sprite, lvl2Sprite, lvl3Sprite, lvl4Sprite, lvl5Sprite, lvl6Sprite, lvl7Sprite, lvl8Sprite;
+	sf::Texture marathonTexture, quitSTexture, quitLTexture, quitCTexture, memoTexture, yesTexture, noTexture, instTexture, lossTexture, winTexture, contTexture;
+	sf::Sprite marathonSprite, quitSSprite, quitLSprite, quitCSprite, memoSprite, yesSprite, noSprite, instSprite, lossSprite, winSprite, contSprite;
 	sf::Texture bomb_texture;
 	sf::Sprite bomb_sprite;
 
@@ -63,7 +67,6 @@ private:
 	bool isClearLevel; // 1 if level is cleared
 	bool startLevel; //flag to generate a new grid, this is so the grid doean't get re-initiated every frame
 
-
 	int lv_grid[5][5];
 	int is_flipped_grid[5][5]; // 0 = unflipped, used to keep track of flipped panels while in the middle of a game
 	int chosen_panel_value;
@@ -74,7 +77,8 @@ private:
 	int current_num_3x;
 	int current_num_2x_found;
 	int current_num_3x_found;
-	
+	//int current_num_1x;
+	//int current_num_1x_found;
 
 	//Private Functions
 	void initVar();

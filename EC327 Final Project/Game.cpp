@@ -9,7 +9,7 @@ void Game::initVar()
 	this->select_instructions = 0;
 	this->select_Quit = false;
 	this->lv_or_marathon = 0; //0 = individual level mode, 1 = marathon mode
-	this->current_lv = 1;
+	this->current_lv = 0;
 	this->current_lv_points = 1;
 	this->current_marathon_total = 0;
 	this->isGameOver = false;
@@ -26,13 +26,17 @@ void Game::initVar()
 
 }
 
-
 void Game::initTexture()
 {
 	//Load Textures from image folder
-	this->easyTexture.loadFromFile("images/EASY.png");
-	this->mediumTexture.loadFromFile("images/MEDIUM.png");
-	this->hardTexture.loadFromFile("images/HARD.png");
+	this->lvl1Texture.loadFromFile("images/level1.png");
+	this->lvl2Texture.loadFromFile("images/level2.png");
+	this->lvl3Texture.loadFromFile("images/level3.png");
+	this->lvl4Texture.loadFromFile("images/level4.png");
+	this->lvl5Texture.loadFromFile("images/level5.png");
+	this->lvl6Texture.loadFromFile("images/level6.png");
+	this->lvl7Texture.loadFromFile("images/level7.png");
+	this->lvl8Texture.loadFromFile("images/level8.png");
 	this->marathonTexture.loadFromFile("images/Marathon.png");
 	this->quitSTexture.loadFromFile("images/QUITSMALL.png");
 	this->quitLTexture.loadFromFile("images/QUITLARGE.png");
@@ -43,6 +47,7 @@ void Game::initTexture()
 	this->bomb_texture.loadFromFile("images/bomb_small.png");
 	this->lossTexture.loadFromFile("images/gameOver.png");
 	this->winTexture.loadFromFile("images/gameWin.png");
+	this->contTexture.loadFromFile("images/continue.png");
 }
 
 void Game::initSprite()
@@ -51,19 +56,25 @@ void Game::initSprite()
 	//Each checkerboard square is 150px
 
 	//button sprites are 256x128 px
-	this->easySprite.setTexture(easyTexture);			this->easySprite.setScale(.50f, .50f);			
-	this->mediumSprite.setTexture(mediumTexture);		this->mediumSprite.setScale(.50f, .50f);		
-	this->hardSprite.setTexture(hardTexture);			this->hardSprite.setScale(.50f, .50f);			
+	this->lvl1Sprite.setTexture(lvl1Texture);			this->lvl1Sprite.setScale(.50f, .50f);
+	this->lvl2Sprite.setTexture(lvl2Texture);			this->lvl2Sprite.setScale(.50f, .50f);
+	this->lvl3Sprite.setTexture(lvl3Texture);			this->lvl3Sprite.setScale(.50f, .50f);
+	this->lvl4Sprite.setTexture(lvl4Texture);			this->lvl4Sprite.setScale(.50f, .50f);
+	this->lvl5Sprite.setTexture(lvl5Texture);			this->lvl5Sprite.setScale(.50f, .50f);
+	this->lvl6Sprite.setTexture(lvl6Texture);			this->lvl6Sprite.setScale(.50f, .50f);
+	this->lvl7Sprite.setTexture(lvl7Texture);			this->lvl7Sprite.setScale(.50f, .50f);
+	this->lvl8Sprite.setTexture(lvl8Texture);			this->lvl8Sprite.setScale(.50f, .50f);
 	this->marathonSprite.setTexture(marathonTexture);	this->marathonSprite.setScale(0.50f, 0.50f);	
 	this->quitSSprite.setTexture(quitSTexture);			this->quitSSprite.setScale(.75f, .75f);
 	this->quitLSprite.setTexture(quitLTexture);			this->quitLSprite.setScale(.50f, .50f);
-	this->quitCSprite.setTexture(quitCTexture);			this->quitCSprite.setScale(2.f, 2.f);	
+	this->quitCSprite.setTexture(quitCTexture);	
 	this->yesSprite.setTexture(yesTexture);				this->yesSprite.setScale(.50f, .50f);			
 	this->noSprite.setTexture(noTexture);				this->noSprite.setScale(.50f, .50f);
 	this->instSprite.setTexture(instTexture);			this->instSprite.setScale(.50f, .50f);
 	this->bomb_sprite.setTexture(bomb_texture);
-	this->lossSprite.setTexture(lossTexture);			this->lossSprite.setScale(2.f, 2.f);
-	this->winSprite.setTexture(winTexture);				this->winSprite.setScale(2.f, 2.f);
+	this->lossSprite.setTexture(lossTexture);			this->lossSprite.setScale(1.5f, 1.5f);
+	this->winSprite.setTexture(winTexture);				this->winSprite.setScale(1.5f, 1.5f);
+	this->contSprite.setTexture(contTexture);			this->contSprite.setScale(1.5f, 1.5f);
 }
 
 void Game::initFont()
@@ -81,14 +92,24 @@ void Game::initText()
 	this->gameTitle.setString("Voltorb Flip V2");
 
 	this->text_current_lv_score.setFont(Roboto);
-	this->text_current_lv_score.setCharacterSize(40);
+	this->text_current_lv_score.setCharacterSize(30);
 	this->text_current_lv_score.setFillColor(sf::Color::White);
 	this->text_current_lv_score.setString("NONE");
 
 	this->instructions.setFont(Roboto);
 	this->instructions.setCharacterSize(24);
 	this->instructions.setFillColor(sf::Color::White);
-	this->instructions.setString("WRITE INSTRUCTIONS HERE, should also note to hit Backspace to return to main menu");
+	this->instructions.setString("WRITE INSTRUCTIONS HERE");
+
+	this->instructions_in_game.setFont(Roboto);
+	this->instructions_in_game.setCharacterSize(24);
+	this->instructions_in_game.setFillColor(sf::Color::White);
+	this->instructions_in_game.setString("Click on a panel to flip it!\nIf you flip a '0', it's game over!\nFind all the 2x and 3x cards to win!");
+
+	this->panel_explain.setFont(Roboto);
+	this->panel_explain.setCharacterSize(24);
+	this->panel_explain.setFillColor(sf::Color::White);
+	this->panel_explain.setString("<- sum of the 1x/2x/3x cards\nin row/column\n<- number of 0's in row/column");
 
 	this->bombs_r1.setFont(Roboto);
 	this->bombs_r1.setCharacterSize(36);
@@ -120,11 +141,6 @@ void Game::initText()
 	this->number_bomb.setCharacterSize(45);
 	this->number_bomb.setFillColor(sf::Color::White);
 	this->number_bomb.setString("O");
-
-	this->ques_mark.setFont(Roboto);
-	this->ques_mark.setCharacterSize(45);
-	this->ques_mark.setFillColor(sf::Color::White);
-	this->ques_mark.setString("?");
 }
 
 void Game::initShapes()
@@ -196,75 +212,6 @@ void Game::pollEvents()
 			case sf::Event::Closed:
 				this->window->close();
 				break;
-			case sf::Event::KeyPressed:
-
-				//temporary keyboard inputs for window changing and panel selection
-				if (this->current_state == 2 && !isGameOver && !isClearLevel && !select_Quit)
-				{
-					if (this->ev.key.code == sf::Keyboard::Tab) //pressing Tab will return to the title screen
-					{
-						this->current_state = 1;
-						startLevel = 0;
-						isGameOver = false;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Escape)
-					{
-					select_Quit = true;
-					}
-				}
-
-				else if (this->current_state == 1 && select_instructions == 1)
-				{
-					if (this->ev.key.code == sf::Keyboard::Backspace) //pressing Backspace on instructions will return to the title screen
-					{
-						select_instructions = 0;
-					}
-				}
-
-				else if (current_state == 2 && isGameOver)
-				{
-					if (this->ev.key.code == sf::Keyboard::Backspace) //return to menu after game over
-					{
-						current_state = 1;
-						isGameOver = false;
-						startLevel = 0;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Space) //start new game
-					{
-						isGameOver = false;
-						startLevel = 1;
-					}
-				}
-
-				else if (current_state == 2 && isClearLevel == 1)
-				{
-					if (this->ev.key.code == sf::Keyboard::Backspace) //return to menu after clearing level
-					{
-						current_state = 1;
-						isClearLevel = 0;
-						startLevel = 0;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Space) //start new game
-					{
-						isClearLevel = 0;
-						startLevel = 1;
-					}
-				}
-
-				else if (current_state == 2 && select_Quit)
-				{
-					if (this->ev.key.code == sf::Keyboard::Space) //go back to game
-					{
-						this->select_Quit = false;
-					}
-					else if (this->ev.key.code == sf::Keyboard::Backspace) //return to menu
-					{
-						this->current_state = 1;
-						this->select_Quit = false;
-					}
-				}
-				break;
-
 			case sf::Event::MouseButtonPressed:
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
 				{
@@ -273,7 +220,7 @@ void Game::pollEvents()
 						if (!this->select_instructions && !this->select_Quit)
 						{
 							//Check which button the mouse is over if the mouse is left-clicked
-							if (this->easySprite.getGlobalBounds().contains(this->mousePosView))
+							if (this->lvl1Sprite.getGlobalBounds().contains(this->mousePosView))
 							{
 								this->current_lv = 1;
 								this->lv_or_marathon = 0;
@@ -281,7 +228,7 @@ void Game::pollEvents()
 								this->startLevel = 1;
 								this->select_Quit = false;
 							}
-							else if (this->mediumSprite.getGlobalBounds().contains(this->mousePosView))
+							else if (this->lvl2Sprite.getGlobalBounds().contains(this->mousePosView))
 							{
 								this->current_lv = 2;
 								this->lv_or_marathon = 0;
@@ -289,7 +236,7 @@ void Game::pollEvents()
 								this->startLevel = 1;
 								this->select_Quit = false;
 							}
-							else if (this->hardSprite.getGlobalBounds().contains(this->mousePosView))
+							else if (this->lvl3Sprite.getGlobalBounds().contains(this->mousePosView))
 							{
 								this->current_lv = 3;
 								this->lv_or_marathon = 0;
@@ -297,9 +244,49 @@ void Game::pollEvents()
 								this->startLevel = 1;
 								this->select_Quit = false;
 							}
+							else if (this->lvl4Sprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 4;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->lvl5Sprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 5;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->lvl6Sprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 6;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->lvl7Sprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 7;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
+							else if (this->lvl8Sprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_lv = 8;
+								this->lv_or_marathon = 0;
+								this->current_state = 2;
+								this->startLevel = 1;
+								this->select_Quit = false;
+							}
 							else if (this->marathonSprite.getGlobalBounds().contains(this->mousePosView))
 							{
-								this->current_lv = 1;
+								this->current_lv = 0;
 								this->lv_or_marathon = 1;
 								this->current_state = 2;
 								this->startLevel = 1;
@@ -372,12 +359,17 @@ void Game::pollEvents()
 								this->select_Quit = false;
 							}
 						}
-						else if (this->isGameOver || this->isClearLevel)
+						else if (this->isGameOver)
 						{
-							//game over and game clear use same menu
+							//game over and game clear and marathon game over use same menu
 
 							if (this->yesSprite.getGlobalBounds().contains(this->mousePosView))
 							{
+								if (lv_or_marathon == 1)
+								{
+									current_lv = 0;
+									current_marathon_total = 0;
+								}
 								this->startLevel = 1;
 								this->isGameOver = false;
 							}
@@ -387,6 +379,16 @@ void Game::pollEvents()
 								this->isGameOver = false;
 							}
 						}
+						else if (this->isClearLevel) 
+							
+							if (this->yesSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->startLevel = 1;
+							}
+							else if (this->noSprite.getGlobalBounds().contains(this->mousePosView))
+							{
+								this->current_state = 1;
+							}
 					}
 				}
 				break;
@@ -399,9 +401,21 @@ void Game::pollEvents()
 void Game::updateText()
 {
 	//creating and updating text for current score and level during game
-	std::stringstream ss;
-	ss << "Current Level: " << this->current_lv << "\n" << "Current Level Points: " << this->current_lv_points;
-	this->text_current_lv_score.setString(ss.str());
+
+	//if in individual level mode, only display current level and level score
+	if (current_state == 2 && lv_or_marathon == 0)
+	{
+		std::stringstream ss;
+		ss << "Current Level: " << current_lv << "\n" << "Current Level Points: " << this->current_lv_points;
+		this->text_current_lv_score.setString(ss.str());
+	}
+	//if in marathon mode, display marathon mode and current marathon total
+	else if (current_state == 2 && lv_or_marathon == 1)
+	{
+		std::stringstream ss;
+		ss << "Marathon Mode" << "\n" << "Current Level : " << current_lv << "\n" << "Current Level Points : " << this->current_lv_points << "\n" << "Total Marathon Points : " << this->current_marathon_total;
+		this->text_current_lv_score.setString(ss.str());
+	}
 
 	//creating and updating text for number of bombs and total of multiplier cards for each row and column
 
@@ -494,6 +508,15 @@ void Game::createGrid()
 		this->current_num_2x_found = 0;
 		this->current_num_3x_found = 0;
 
+		if (lv_or_marathon == 1)
+		{
+			if (current_lv != 8)
+			{
+				current_lv++;
+			}
+			
+		}
+
 		//reset lv_grid matrix to all 1's
 		for (int i = 0; i < 5; i++)
 		{
@@ -513,244 +536,244 @@ void Game::createGrid()
 		}
 
 		int a, b; //indices to reference elements in grid matrix
-		int combo_choice = rand() % 4; //rand() % 4
+		int combo_choice = rand() % 5;
 
 		//choose an allocation of bombs and multiplier cards for the level
+		
 		switch (current_lv) //check current level
 		{
-			case 1: //if in level 1
+		case 1: //if in level 1
+		{
+			this->current_num_bombs = 6;
+			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
 			{
-				this->current_num_bombs = 6;
-				switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
-				{
-					case 0:
-						this->current_num_2x = 3;
-						this->current_num_3x = 1;
-						break;
-					case 1:
-						this->current_num_2x = 0;
-						this->current_num_3x = 3;
-						break;
-					case 2:
-						this->current_num_2x = 5;
-						this->current_num_3x = 0;
-						break;
-					case 3:
-						this->current_num_2x = 2;
-						this->current_num_3x = 2;
-						break;
-					case 4:
-						this->current_num_2x = 4;
-						this->current_num_3x = 1;
-						break;
-				}
+			case 0:
+				this->current_num_2x = 3;
+				this->current_num_3x = 1;
+				break;
+			case 1:
+				this->current_num_2x = 0;
+				this->current_num_3x = 3;
+				break;
+			case 2:
+				this->current_num_2x = 5;
+				this->current_num_3x = 0;
+				break;
+			case 3:
+				this->current_num_2x = 2;
+				this->current_num_3x = 2;
+				break;
+			case 4:
+				this->current_num_2x = 4;
+				this->current_num_3x = 1;
 				break;
 			}
-			case 2: //level 2
+			break;
+		}
+		case 2: //level 2
+		{
+			this->current_num_bombs = 7;
+			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
 			{
-				this->current_num_bombs = 7;
-				switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
-				{
-					case 0:						
-						this->current_num_2x = 1;
-						this->current_num_3x = 3;
-						break;
-					case 1:
-						this->current_num_2x = 6;
-						this->current_num_3x = 0;
-						break;
-					case 2:
-						this->current_num_2x = 3;
-						this->current_num_3x = 2;
-						break;
-					case 3:
-						this->current_num_2x = 0;
-						this->current_num_3x = 4;
-						break;
-					case 4:
-						this->current_num_2x = 5;
-						this->current_num_3x = 1;
-						break;
-				}
+			case 0:
+				this->current_num_2x = 1;
+				this->current_num_3x = 3;
+				break;
+			case 1:
+				this->current_num_2x = 6;
+				this->current_num_3x = 0;
+				break;
+			case 2:
+				this->current_num_2x = 3;
+				this->current_num_3x = 2;
+				break;
+			case 3:
+				this->current_num_2x = 0;
+				this->current_num_3x = 4;
+				break;
+			case 4:
+				this->current_num_2x = 5;
+				this->current_num_3x = 1;
 				break;
 			}
-			case 3: //level 3
+			break;
+		}
+		case 3: //level 3
+		{
+			this->current_num_bombs = 8;
+			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
 			{
+			case 0:
+				this->current_num_2x = 2;
+				this->current_num_3x = 3;
+				break;
+			case 1:
+				this->current_num_2x = 7;
+				this->current_num_3x = 0;
+				break;
+			case 2:
+				this->current_num_2x = 4;
+				this->current_num_3x = 2;
+				break;
+			case 3:
+				this->current_num_2x = 1;
+				this->current_num_3x = 4;
+				break;
+			case 4:
+				this->current_num_2x = 6;
+				this->current_num_3x = 1;
+				break;
+			}
+			break;
+		}
+		case 4: //level 4
+		{
+			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
+			{
+			case 0:
 				this->current_num_bombs = 8;
-				switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
-				{
-					case 0:
-						this->current_num_2x = 2;
-						this->current_num_3x = 3;
-						break;
-					case 1:
-						this->current_num_2x = 7;
-						this->current_num_3x = 0;
-						break;
-					case 2:
-						this->current_num_2x = 4;
-						this->current_num_3x = 2;
-						break;
-					case 3:
-						this->current_num_2x = 1;
-						this->current_num_3x = 4;
-						break;
-					case 4:
-						this->current_num_2x = 6;
-						this->current_num_3x = 1;
-						break;
-				}
+				this->current_num_2x = 3;
+				this->current_num_3x = 3;
 				break;
-			}
-			
-			case 4: //level 4
-			{
-				switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
-				{
-				case 0:
-					this->current_num_bombs = 8;
-					this->current_num_2x = 3;
-					this->current_num_3x = 3;
-					break;
-				case 1:
-					this->current_num_bombs = 8;
-					this->current_num_2x = 0;
-					this->current_num_3x = 5;
-					break;
-				case 2:
-					this->current_num_bombs = 10;
-					this->current_num_2x = 8;
-					this->current_num_3x = 0;
-					break;
-				case 3:
-					this->current_num_bombs = 10;
-					this->current_num_2x = 5;
-					this->current_num_3x = 2;
-					break;
-				case 4:
-					this->current_num_bombs = 10;
-					this->current_num_2x = 2;
-					this->current_num_3x = 4;
-					break;
-				}
+			case 1:
+				this->current_num_bombs = 8;
+				this->current_num_2x = 0;
+				this->current_num_3x = 5;
 				break;
-			}
-			case 5: //level 5
-			{
+			case 2:
 				this->current_num_bombs = 10;
-				switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
-				{
-				case 0:
-					this->current_num_2x = 7;
-					this->current_num_3x = 1;
-					break;
-				case 1:
-					this->current_num_2x = 4;
-					this->current_num_3x = 3;
-					break;
-				case 2:
-					this->current_num_2x = 1;
-					this->current_num_3x = 5;
-					break;
-				case 3:
-					this->current_num_2x = 9;
-					this->current_num_3x = 0;
-					break;
-				case 4:
-					this->current_num_2x = 6;
-					this->current_num_3x = 2;
-					break;
-				}
+				this->current_num_2x = 8;
+				this->current_num_3x = 0;
 				break;
-			}
-			case 6: //level 6
-			{
+			case 3:
 				this->current_num_bombs = 10;
-				switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
-				{
-				case 0:
-					this->current_num_2x = 3;
-					this->current_num_3x = 4;
-					break;
-				case 1:
-					this->current_num_2x = 0;
-					this->current_num_3x = 6;
-					break;
-				case 2:
-					this->current_num_2x = 8;
-					this->current_num_3x = 1;
-					break;
-				case 3:
-					this->current_num_2x = 5;
-					this->current_num_3x = 3;
-					break;
-				case 4:
-					this->current_num_2x = 2;
-					this->current_num_3x = 5;
-					break;
-				}
+				this->current_num_2x = 5;
+				this->current_num_3x = 2;
 				break;
-			}
-			case 7: //level 7
-			{
-				switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
-				{
-				case 0:
-					this->current_num_bombs = 10;
-					this->current_num_2x = 7;
-					this->current_num_3x = 2;
-					break;
-				case 1:
-					this->current_num_bombs = 10;
-					this->current_num_2x = 4;
-					this->current_num_3x = 4;
-					break;
-				case 2:
-					this->current_num_bombs = 13;
-					this->current_num_2x = 1;
-					this->current_num_3x = 6;
-					break;
-				case 3:
-					this->current_num_bombs = 13;
-					this->current_num_2x = 9;
-					this->current_num_3x = 1;
-					break;
-				case 4:
-					this->current_num_bombs = 10;
-					this->current_num_2x = 6;
-					this->current_num_3x = 3;
-					break;
-				}
-				break;
-			}
-			case 8: //level 8
-			{
+			case 4:
 				this->current_num_bombs = 10;
-				switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
-				{
-				case 0:
-					this->current_num_2x = 0;
-					this->current_num_3x = 7;
-					break;
-				case 1:
-					this->current_num_2x = 8;
-					this->current_num_3x = 2;
-					break;
-				case 2:
-					this->current_num_2x = 5;
-					this->current_num_3x = 4;
-					break;
-				case 3:
-					this->current_num_2x = 2;
-					this->current_num_3x = 6;
-					break;
-				case 4:
-					this->current_num_2x = 7;
-					this->current_num_3x = 3;
-					break;
-				}
+				this->current_num_2x = 2;
+				this->current_num_3x = 4;
 				break;
 			}
+			break;
+		}
+		case 5: //level 5
+		{
+			this->current_num_bombs = 10;
+			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
+			{
+			case 0:
+				this->current_num_2x = 7;
+				this->current_num_3x = 1;
+				break;
+			case 1:
+				this->current_num_2x = 4;
+				this->current_num_3x = 3;
+				break;
+			case 2:
+				this->current_num_2x = 1;
+				this->current_num_3x = 5;
+				break;
+			case 3:
+				this->current_num_2x = 9;
+				this->current_num_3x = 0;
+				break;
+			case 4:
+				this->current_num_2x = 6;
+				this->current_num_3x = 2;
+				break;
+			}
+			break;
+		}
+		case 6: //level 6
+		{
+			this->current_num_bombs = 10;
+			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
+			{
+			case 0:
+				this->current_num_2x = 3;
+				this->current_num_3x = 4;
+				break;
+			case 1:
+				this->current_num_2x = 0;
+				this->current_num_3x = 6;
+				break;
+			case 2:
+				this->current_num_2x = 8;
+				this->current_num_3x = 1;
+				break;
+			case 3:
+				this->current_num_2x = 5;
+				this->current_num_3x = 3;
+				break;
+			case 4:
+				this->current_num_2x = 2;
+				this->current_num_3x = 5;
+				break;
+			}
+			break;
+		}
+		case 7: //level 7
+		{
+			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
+			{
+			case 0:
+				this->current_num_bombs = 10;
+				this->current_num_2x = 7;
+				this->current_num_3x = 2;
+				break;
+			case 1:
+				this->current_num_bombs = 10;
+				this->current_num_2x = 4;
+				this->current_num_3x = 4;
+				break;
+			case 2:
+				this->current_num_bombs = 13;
+				this->current_num_2x = 1;
+				this->current_num_3x = 6;
+				break;
+			case 3:
+				this->current_num_bombs = 13;
+				this->current_num_2x = 9;
+				this->current_num_3x = 1;
+				break;
+			case 4:
+				this->current_num_bombs = 10;
+				this->current_num_2x = 6;
+				this->current_num_3x = 3;
+				break;
+			}
+			break;
+		}
+		case 8: //level 8
+		{
+			this->current_num_bombs = 10;
+			switch (combo_choice) // randomly choose one of 5 possible bomb/2x/3x card allocations for the level
+			{
+			case 0:
+				this->current_num_2x = 0;
+				this->current_num_3x = 7;
+				break;
+			case 1:
+				this->current_num_2x = 8;
+				this->current_num_3x = 2;
+				break;
+			case 2:
+				this->current_num_2x = 5;
+				this->current_num_3x = 4;
+				break;
+			case 3:
+				this->current_num_2x = 2;
+				this->current_num_3x = 6;
+				break;
+			case 4:
+				this->current_num_2x = 7;
+				this->current_num_3x = 3;
+				break;
+			}
+			break;
+		}
 		}
 
 		//set bombs and multiplier numbers on matrix
@@ -758,8 +781,8 @@ void Game::createGrid()
 		{
 			do
 			{
-				a = rand() % 4; 
-				b = rand() % 4; 
+				a = rand() % 5; 
+				b = rand() % 5; 
 			} while (lv_grid[a][b] == 0); //randomly choose a location for each bomb; while loop to check that the panel isn't already taken
 
 			lv_grid[a][b] = 0; //set the panel equal to bomb (0)
@@ -769,8 +792,8 @@ void Game::createGrid()
 		{
 			do
 			{
-				a = rand() % 4;
-				b = rand() % 4;
+				a = rand() % 5;
+				b = rand() % 5;
 			} while (lv_grid[a][b] == 0 || lv_grid[a][b] == 2);
 
 			lv_grid[a][b] = 2;
@@ -780,8 +803,8 @@ void Game::createGrid()
 		{
 			do
 			{
-				a = rand() % 4;
-				b = rand() % 4;
+				a = rand() % 5;
+				b = rand() % 5;
 			} while (lv_grid[a][b] == 0 || lv_grid[a][b] == 2 || lv_grid[a][b] == 3);
 
 			lv_grid[a][b] = 3;
@@ -843,6 +866,12 @@ void Game::updateGrid()
 			if (this->current_num_2x == current_num_2x_found && this->current_num_3x == current_num_3x_found)
 			{
 				this->isClearLevel = 1;
+
+				if (lv_or_marathon == 1)
+				{
+					current_marathon_total += current_lv_points;
+					current_lv_points = 0;
+				}
 			}
 		}
 		
@@ -858,11 +887,6 @@ void Game::renderText()
 		//Display name of game on menu
 		gameTitle.setPosition(this->window->getSize().x / 2 - gameTitle.getLocalBounds().width / 2, rowHeight * 1);
 		this->window->draw(this->gameTitle);
-
-		/*
-		menuPrompt.setPosition(150, 200);
-		this->window->draw(this->menuPrompt);
-		*/
 	}
 
 	else if (current_state == 1 && select_instructions == 1)
@@ -877,6 +901,13 @@ void Game::renderText()
 		//Display current score and level on game screen
 		text_current_lv_score.setPosition(800.f, 50.f); 
 		this->window->draw(this->text_current_lv_score);
+
+		//Display quick isntructions on screen
+		instructions_in_game.setPosition(800.f, 250.f); //set position
+		this->window->draw(this->instructions_in_game);
+
+		panel_explain.setPosition(600.f, 600.f);
+		this->window->draw(this->panel_explain);
 	}
 
 }
@@ -931,34 +962,12 @@ void Game::render_flipped_panel()
 				{
 					panel_facedown.setPosition(100 + (99 * j), 100 + (99 * i));
 					this->window->draw(panel_facedown);
-
-					/*
-					std::string s(1, ((char)(65 + i * 5 + j)));
-					ques_mark.setString(s);
-					ques_mark.setPosition(135 + (99 * j), 115 + (99 * i));
-					this->window->draw(ques_mark);
-					*/
 				}
 				
 			}
 		}
 	}
 }
-
-/*
-void Game::renderGrid()
-{
-	if (current_state == 2)
-	{
-		sf::Texture grid;
-		grid.loadFromFile("images/grid_6_cut.png");
-		sf::Sprite grid_facedown(grid);
-		grid_facedown.setScale(.15, .15);
-		grid_facedown.setPosition(98, 98);
-		this->window->draw(grid_facedown);
-	}
-}
-*/
 
 
 void Game::renderButtons()
@@ -969,19 +978,30 @@ void Game::renderButtons()
 
 	if (this->current_state == 1)
 	{
+		this->quitCSprite.setScale(2.f, 2.f);
 		if (!this->select_instructions && !this->select_Quit)
 		{
-			this->easySprite.setPosition(colWidth * 1, rowHeight * 3);
-			this->window->draw(easySprite);
-			this->mediumSprite.setPosition(colWidth * 1, rowHeight * 5);
-			this->window->draw(mediumSprite);
-			this->hardSprite.setPosition(colWidth * 1, rowHeight * 7);
-			this->window->draw(hardSprite);
-			this->marathonSprite.setPosition(colWidth * 1, rowHeight * 9);
+			this->lvl1Sprite.setPosition(colWidth * 1, rowHeight * 3.5);
+			this->window->draw(lvl1Sprite);
+			this->lvl2Sprite.setPosition(colWidth * 3, rowHeight * 3.5);
+			this->window->draw(lvl2Sprite);
+			this->lvl3Sprite.setPosition(colWidth * 1, rowHeight * 5.5);
+			this->window->draw(lvl3Sprite);
+			this->lvl4Sprite.setPosition(colWidth * 3, rowHeight * 5.5);
+			this->window->draw(lvl4Sprite);
+			this->lvl5Sprite.setPosition(colWidth * 1, rowHeight * 7.5);
+			this->window->draw(lvl5Sprite);
+			this->lvl6Sprite.setPosition(colWidth * 3, rowHeight * 7.5);
+			this->window->draw(lvl6Sprite);
+			this->lvl7Sprite.setPosition(colWidth * 1, rowHeight * 9.5);
+			this->window->draw(lvl7Sprite);
+			this->lvl8Sprite.setPosition(colWidth * 3, rowHeight * 9.5);
+			this->window->draw(lvl8Sprite);
+			this->marathonSprite.setPosition(colWidth * 5, rowHeight * 6.5);
 			this->window->draw(marathonSprite);
-			this->instSprite.setPosition(colWidth * 4, rowHeight * 4);
+			this->instSprite.setPosition(colWidth * 5, rowHeight * 3.5);
 			this->window->draw(instSprite);
-			this->quitLSprite.setPosition(colWidth * 4, rowHeight * 8);
+			this->quitLSprite.setPosition(colWidth * 5, rowHeight * 9.5);
 			this->window->draw(quitLSprite);
 		}
 		else if (this->select_instructions)
@@ -1004,6 +1024,7 @@ void Game::renderButtons()
 	}
 	else if (this->current_state == 2)
 	{
+		this->quitCSprite.setScale(1.5f, 1.5f);
 		if (!select_Quit && !this->isGameOver && !this->isClearLevel)
 		{
 			this->quitSSprite.setPosition(colWidth * 5.5, rowHeight * 11);
@@ -1012,33 +1033,38 @@ void Game::renderButtons()
 		else if (this->select_Quit == 1)
 		{
 			//Display confirm quit message
-
-			this->quitCSprite.setPosition(this->window->getSize().x / 2 - this->quitCSprite.getLocalBounds().width, 
-										  this->window->getSize().y / 2 - this->quitCSprite.getLocalBounds().height);
+			this->quitCSprite.setPosition(colWidth*4.5, rowHeight*6.5);
 			this->window->draw(quitCSprite);
-			this->yesSprite.setPosition(this->window->getSize().x / 2 - 192, this->window->getSize().y / 2 + 25);
+			this->yesSprite.setPosition(colWidth * 4.5 + 32, rowHeight * 6.5 + 104);
 			this->window->draw(yesSprite);
-			this->noSprite.setPosition(this->window->getSize().x / 2 + 64, this->window->getSize().y / 2 + 25);
+			this->noSprite.setPosition(colWidth * 4.5 + 228, rowHeight * 6.5 + 104);
 			this->window->draw(noSprite);
 		}
 		else if (this->isGameOver) 
 		{
-			this->lossSprite.setPosition(this->window->getSize().x / 2 - this->lossSprite.getLocalBounds().width,
-										 this->window->getSize().y / 2 - this->lossSprite.getLocalBounds().height);
+			this->lossSprite.setPosition(colWidth * 4.5, rowHeight * 6.5);
 			this->window->draw(lossSprite);
-			this->yesSprite.setPosition(this->window->getSize().x / 2 - 192, this->window->getSize().y / 2 + 25);
+			this->yesSprite.setPosition(colWidth * 4.5 + 32, rowHeight * 6.5 + 104);
 			this->window->draw(yesSprite);
-			this->noSprite.setPosition(this->window->getSize().x / 2 + 64, this->window->getSize().y / 2 + 25);
+			this->noSprite.setPosition(colWidth * 4.5 + 228, rowHeight * 6.5 + 104);
 			this->window->draw(noSprite);
 		}
-		else if (this->isClearLevel)
+		else if (this->isClearLevel && !this->lv_or_marathon)
 		{
-			this->winSprite.setPosition(this->window->getSize().x / 2 - this->winSprite.getLocalBounds().width,
-										this->window->getSize().y / 2 - this->winSprite.getLocalBounds().height);
+			this->winSprite.setPosition(colWidth * 4.5, rowHeight * 6.5);
 			this->window->draw(winSprite);
-			this->yesSprite.setPosition(this->window->getSize().x / 2 - 192, this->window->getSize().y / 2 + 25);
+			this->yesSprite.setPosition(colWidth * 4.5 + 32, rowHeight * 6.5 + 104);
 			this->window->draw(yesSprite);
-			this->noSprite.setPosition(this->window->getSize().x / 2 + 64, this->window->getSize().y / 2 + 25);
+			this->noSprite.setPosition(colWidth * 4.5 + 228, rowHeight * 6.5 + 104);
+			this->window->draw(noSprite);
+		}
+		else if (this->isClearLevel && this->lv_or_marathon)
+		{
+			this->winSprite.setPosition(colWidth * 4.5, rowHeight * 6.5);
+			this->window->draw(winSprite);
+			this->yesSprite.setPosition(colWidth * 4.5 + 32, rowHeight * 6.5 + 104);
+			this->window->draw(yesSprite);
+			this->noSprite.setPosition(colWidth * 4.5 + 228, rowHeight * 6.5 + 104);
 			this->window->draw(noSprite);
 		}
 	}
@@ -1059,13 +1085,83 @@ void Game::render()
 	//Render game objects(window, tiles, scoreboard, etc.)
 	this->window->clear(sf::Color(34, 65, 123, 255));
 
-	//renderGrid();
-	
-	
 	render_flipped_panel();
 	updateText();
 	renderText();
-	this->renderButtons();
+	renderButtons();
 
 	this->window->display();
 }
+
+/*
+Notes:
+- We need to add another box for asking the player if they want to continue playing after they've cleared a level in marathon mode (lines 327-341)
+- Marathon mode should run correctly after this option is added
+- The game over and game win boxes are obscuring the board, is there a way to make them transparent? Even though the game is over/won, it
+would be nice for the player to be able to see the final layout of the board
+- Pujan said we should add instructions on the game page itself, so I've added some mini instructions 
+- Do you still want to make finding 1's mandatory?
+- Still need to put instructions in the main instructions page
+
+- The leftmost column and bottom row of the grid never have bombs or 2's or 3's - are you also getting this problem? I was reading online about
+the rand method being biased toward the lower end of the range, but I don't know any other method to generate randon numbers...
+
+- I've tried the level generator below (the bomb/1x/2x/3x quantites are all randomly generated), but the results feel really even
+Do you  want to use this method or shoudl we just go back to using the set allocations?
+
+Draft for alternate level generator:
+
+switch (current_lv) //check current level
+		{
+			case 1: //easy mode
+			{
+				this->current_num_bombs = (rand() % 3) + 6; //6-8
+				this->current_num_2x = rand() % 8; //0-7
+
+				//need to balance the number of 2x and 3x cards
+				if (current_num_2x > 4)
+				{
+					this->current_num_3x = rand() % 3; //0-2
+				}
+				else
+				{
+					this->current_num_3x = (rand() % 2) + 3; //3-4
+				}
+				break;
+			}
+			case 2: //medium mode
+			{
+				this->current_num_bombs = (rand() % 3) + 8; //8-10
+				this->current_num_2x = (rand() % 8) + 1; //1-8
+
+				//need to balance the number of 2x and 3x cards
+				if (current_num_2x > 4)
+				{
+					this->current_num_3x = (rand() % 4) + 1; //1-4
+				}
+				else
+				{
+					this->current_num_3x = (rand() % 3) + 4; //4-6
+				}
+				break;
+			}
+			case 3: //hard mode
+			{
+				this->current_num_bombs = (rand() % 3) + 10; //10-13
+				this->current_num_2x = (rand() % 8) + 1; //1-9
+
+				//need to balance the number of 2x and 3x cards
+				if (current_num_2x > 4)
+				{
+					this->current_num_3x = (rand() % 2) + 1; //1-2
+				}
+				else
+				{
+					this->current_num_3x = (rand() % 3) + 4; //4-6
+				}
+				break;
+			}
+
+		}
+
+*/
