@@ -1066,8 +1066,8 @@ void Game::renderButtons()
 		}
 		else if (this->isClearLevel && this->lv_or_marathon)
 		{
-			this->winSprite.setPosition(colWidth * 4.5, rowHeight * 6.5);
-			this->window->draw(winSprite);
+			this->contSprite.setPosition(colWidth * 4.5, rowHeight * 6.5);
+			this->window->draw(contSprite);
 			this->yesSprite.setPosition(colWidth * 4.5 + 32, rowHeight * 6.5 + 104);
 			this->window->draw(yesSprite);
 			this->noSprite.setPosition(colWidth * 4.5 + 228, rowHeight * 6.5 + 104);
