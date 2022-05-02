@@ -17,6 +17,6 @@ Tristen Liu (tristenl@bu.edu), Jane Tsui (janetsui@bu.edu),	Michael Igwe (migwe@
 > make
 
 3) Run the command 
-> ./bombflip **CHANGE THIS TO WHATEVER THE RUNFILE IS CALLED**  
+> ./Game (previously "./bombflip)  
 
 4) Enjoy the game!
