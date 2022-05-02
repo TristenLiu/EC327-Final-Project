@@ -7,16 +7,10 @@ Tristen Liu (tristenl@bu.edu), Jane Tsui (janetsui@bu.edu),	Michael Igwe (migwe@
 ## Overview 
   This repository creates a game inspired by the minigame "Voltorb Flip" in Pokemon. This game features 8 levels of increasing difficulty, and a marathon mode that progressively gets harder as the player wins each instance. In each level, a 5x5 grid is rendered that consists of bombs, 1x, 2x and 3x tiles. The goal of the game is to flip all of the 2x and 3x tiles, while avoiding the bomb tiles. The score of each level is calculated by the multiplication of each tile that is flipped, and as such only the 2x and 3x tiles will count towards the score. The bomb tiles have a value of 0, and if it is flipped the level will end and the score will drop to 0. Further instructions can be found on the title page of the application. 
   
-  This game uses the SFML library to render and create all the windows, game graphics and assets. The library is dynamically present in necessary folders, and as such no further installation is necessary in order to run this game.  
+  This game uses the SFML library to render and create all the windows, game graphics and assets. The library is dynamically implemented in necessary folders, and as such no further installation is necessary in order to run this game.  
   
 ## Build Instructions 
-1) Clone this github repository in the terminal
+1) Clone this github repository into Visual Studio 2022
 > git clone https://github.com/TristenLiu/EC327-Final-Project.git
 
-2) Run the makefile
-> make
-
-3) Run the command 
-> ./Game (previously "./bombflip)  
-
-4) Enjoy the game!
+2) Run the code within the Visual Studio application and enjoy!
